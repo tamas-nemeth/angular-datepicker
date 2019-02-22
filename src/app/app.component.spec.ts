@@ -1,4 +1,10 @@
-import { TestBed, async, ComponentFixture } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+
+import { MockComponent } from 'ng-mocks';
+
+import { CalendarComponent } from 'calendar';
+
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
@@ -7,8 +13,12 @@ describe('AppComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule,
+      ],
       declarations: [
-        AppComponent
+        AppComponent,
+        MockComponent(CalendarComponent),
       ],
     }).compileComponents();
   }));

@@ -1,0 +1,12 @@
+<div class="calendar"
+     [ngClass]="'calendar--first-day-of-week-' + (firstDayOfWeek | lowercase)"
+     [class.calendar--disabled]="disabled">
+  <lib-calendar-week [locale]="locale"></lib-calendar-week>
+  <lib-calendar-month *ngFor="let month of months; trackBy: trackByMilliseconds"
+                      [month]="month"
+                      [locale]="locale"
+                      [selectedDate]="selectedDate"
+                      [min]="min"
+                      [monthCaptionPattern]="monthCaptionPattern"
+                      (pick)="onPick($event)"></lib-calendar-month>
+</div>

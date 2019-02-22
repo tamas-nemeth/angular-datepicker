@@ -1,0 +1,58 @@
+<form [formGroup]="demoFormGroup">
+  <fieldset>
+    <legend>Calendar inputs</legend>
+
+    <div>
+      <label>First day of week</label>
+      <input type="radio" formControlName="firstDayOfWeek" value="SUNDAY" id="sunday"><label for="sunday">Sunday</label>
+      <input type="radio" formControlName="firstDayOfWeek" value="MONDAY" id="monday"><label for="monday">Monday</label>
+    </div>
+
+    <div>
+      <label for="locale">Locale</label>
+      <select id="locale" formControlName="locale">
+        <option value="">Default</option>
+        <option value="en">English</option>
+        <option value="hu">Hungarian</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="min">Minimum date</label>
+      <input type="date" id="min" formControlName="min" placeholder="YYYY-MM-DD">
+    </div>
+
+    <div>
+      <label for="first-month">First month</label>
+      <input type="date" id="first-month" formControlName="firstMonth" placeholder="YYYY-MM-DD">
+    </div>
+
+    <div>
+      <label for="number-of-months">Number of months</label>
+      <input type="number" id="number-of-months" formControlName="numberOfMonths" min="1" max="1200">
+    </div>
+
+    <div>
+      <label for="month-caption-pattern">Month caption pattern</label>
+      <input type="text" id="month-caption-pattern" formControlName="monthCaptionPattern" placeholder="y, MMMM">
+    </div>
+
+    <div>
+      <label for="disabled">Disabled</label>
+      <input id="disabled" type="checkbox" [formControl]="disabledControl">
+    </div>
+
+    <button (click)="selectToday()">Select today</button>
+
+    <div>Selected date: {{dateControl.value | date}}</div>
+  </fieldset>
+
+  <lib-calendar [firstDayOfWeek]="firstDayOfWeekControl.value"
+                [locale]="localeControl.value"
+                [min]="minDate$ | async"
+                [firstMonth]="firstMonth$ | async"
+                [monthCaptionPattern]="monthCaptionPatternControl.value || localeToMonthCaptionPattern[localeControl.value]"
+                [numberOfMonths]="numberOfMonthsControl.value"
+                [formControl]="dateControl"
+  ></lib-calendar>
+</form>

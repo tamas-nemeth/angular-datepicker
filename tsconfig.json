@@ -22,6 +22,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "calendar": [
+        "libs/calendar/src/public_api.ts"
+      ],
+      "date-utils": [
+        "libs/date-utils"
+      ]
+    }
   }
 }

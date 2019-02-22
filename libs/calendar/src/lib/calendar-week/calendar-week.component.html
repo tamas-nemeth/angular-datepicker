@@ -1,0 +1,3 @@
+<div class="calendar-week">
+  <abbr class="calendar-week__day" *ngFor="let dayOfWeek of daysOfWeek" [title]="dayOfWeek | date:'EEEE':undefined:locale">{{dayOfWeek | date:'EEEEE':undefined:locale}}</abbr>
+</div>

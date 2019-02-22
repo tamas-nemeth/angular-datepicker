@@ -1,0 +1,23 @@
+$gridCellSize: 42px;
+$numberOfDaysInAWeek: 7;
+
+$firstDayOfWeekToDaysOfWeek: (
+  sunday: (
+    sunday,
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+    saturday
+  ),
+  monday: (
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+    saturday,
+    sunday
+  )
+);

@@ -1,0 +1,48 @@
+@import "../calendar-constants";
+
+:host-context(.calendar--disabled) > * {
+  opacity: .38;
+}
+
+.calendar-month {
+  display: grid;
+  grid-template-columns: repeat($numberOfDaysInAWeek, $gridCellSize);
+  grid-auto-rows: $gridCellSize;
+  place-items: stretch;
+  justify-content: center;
+
+  @each $firstDayOfWeek, $daysOfWeek in $firstDayOfWeekToDaysOfWeek {
+    @each $dayOfWeek in $daysOfWeek {
+      :host-context(.calendar--first-day-of-week-#{$firstDayOfWeek}) &--first-day-#{$dayOfWeek} {
+        time:first-child {
+          grid-column-start: index($daysOfWeek, $dayOfWeek);
+        }
+      }
+    }
+  }
+
+  &-caption {
+    display: grid;
+    grid-template-rows: $gridCellSize;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    background-color: snow;
+    font-weight: bold;
+  }
+
+  &__day {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &--selected {
+      background-color: chocolate;
+      color: white;
+    }
+
+    &--disabled {
+      opacity: .38;
+    }
+  }
+}

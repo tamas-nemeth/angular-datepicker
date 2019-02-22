@@ -1,0 +1,13 @@
+<div class="calendar-month-caption">{{month | date:monthCaptionPattern:undefined:locale}}</div>
+<div class="calendar-month"
+     [ngClass]="[
+       'calendar-month--first-day-' + firstDayOfMonth
+     ]"
+     (click)="onMonthClick($event)">
+  <time class="calendar-month__day"
+        *ngFor="let dayOfMonth of daysOfMonth"
+        [attr.datetime]="dayOfMonth | date:'yyyy-MM-dd'"
+        [class.calendar-month__day--selected]="isSelected(dayOfMonth)"
+        [class.calendar-month__day--disabled]="isDisabled(dayOfMonth)"
+  >{{dayOfMonth | date:'d'}}</time>
+</div>
