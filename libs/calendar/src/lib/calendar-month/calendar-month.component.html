@@ -1,4 +1,12 @@
-<div class="calendar-month-caption">{{month | date:monthCaptionPattern:undefined:locale}}</div>
+<div class="calendar-month-header">
+  <span class="calendar-month-header__stepper calendar-month-header__stepper--previous"
+        *ngIf="displayMonthStepper"
+        (click)="stepMonth(-1)">◀</span>
+  <span class="calendar-month-header__caption">{{month | date:monthCaptionPattern:undefined:locale}}</span>
+  <span class="calendar-month-header__stepper calendar-month-header__stepper--next"
+        *ngIf="displayMonthStepper"
+        (click)="stepMonth(1)">▶</span>
+</div>
 <div class="calendar-month"
      [ngClass]="[
        'calendar-month--first-day-' + firstDayOfMonth

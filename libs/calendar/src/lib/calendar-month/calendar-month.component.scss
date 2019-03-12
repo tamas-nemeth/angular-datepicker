@@ -2,6 +2,7 @@
 
 :host-context(.calendar--disabled) > * {
   opacity: .38;
+  cursor: initial;
 }
 
 .calendar-month {
@@ -21,7 +22,7 @@
     }
   }
 
-  &-caption {
+  &-header {
     display: grid;
     grid-template-rows: $gridCellSize;
     align-items: center;
@@ -29,12 +30,30 @@
     text-transform: uppercase;
     background-color: snow;
     font-weight: bold;
+    grid-template-columns: 42px 5*42px 42px;
+    place-items: stretch;
+    line-height: 42px;
+
+    &__caption {
+      grid-column-start: 2;
+    }
+
+    &__caption, &__stepper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &__stepper {
+      cursor: pointer;
+    }
   }
 
   &__day {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 
     &--selected {
       background-color: chocolate;
@@ -43,6 +62,10 @@
 
     &--disabled {
       opacity: .38;
+    }
+
+    :host-context(.calendar--disabled) & {
+      cursor: initial;
     }
   }
 }

@@ -13,7 +13,7 @@ import {
 import {
   areDatesInSameMonth,
   DayOfWeek,
-  isDateLaterThan,
+  isDateAfter,
   isSameDate,
   numberOfDaysInMonth,
   NumericDayOfWeek,
@@ -37,6 +37,7 @@ export class CalendarMonthComponent implements OnChanges, AfterViewInit {
   @Input() locale?: string;
   @Input() selectedDate?: Date;
   @Input() min?: Date;
+  @Input() displayMonthStepper = true;
 
   private _month!: Date;
 
@@ -65,6 +66,7 @@ export class CalendarMonthComponent implements OnChanges, AfterViewInit {
   }
 
   @Output() pick = new EventEmitter<Date>();
+  @Output() monthStep = new EventEmitter<-1 | 1>();
 
   constructor(public changeDetectorRef: ChangeDetectorRef) {}
 
@@ -83,7 +85,7 @@ export class CalendarMonthComponent implements OnChanges, AfterViewInit {
   }
 
   isDisabled(dayOfMonth: Date) {
-    return this.min && isDateLaterThan(this.min, dayOfMonth);
+    return this.min && isDateAfter(this.min, dayOfMonth);
   }
 
   onMonthClick(event: MouseEvent) {
@@ -92,6 +94,10 @@ export class CalendarMonthComponent implements OnChanges, AfterViewInit {
     if (target && target.matches(this.daySelector)) {
       this.onDateClick(target);
     }
+  }
+
+  stepMonth(step: -1 | 1) {
+    this.monthStep.emit(step);
   }
 
   private onDateClick(dateElement: HTMLElement) {

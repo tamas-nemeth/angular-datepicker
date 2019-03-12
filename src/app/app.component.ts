@@ -12,7 +12,7 @@ import { startOfDay, toISODateString } from 'date-utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
-  today = startOfDay(new Date());
+  private readonly today = startOfDay(new Date());
 
   localeToMonthCaptionPattern: {[locale: string]: string | undefined} = {
     'en': 'MMMM y',
@@ -24,7 +24,7 @@ export class AppComponent {
   minControl = new FormControl(toISODateString(new Date()));
   dateControl = new FormControl();
   disabledControl = new FormControl(false);
-  numberOfMonthsControl = new FormControl(12);
+  numberOfMonthsControl = new FormControl(1);
   monthCaptionPatternControl = new FormControl();
   firstMonthControl = new FormControl();
 

@@ -28,6 +28,10 @@ export function startOfDay(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
+export function startOfMonth(date: Date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
 export function numberOfDaysInMonth(date: Date) {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 }
@@ -40,7 +44,7 @@ export function areDatesInSameMonth(date1: Date, date2: Date) {
   return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth();
 }
 
-export function isDateLaterThan(date1: Date, date2: Date) {
+export function isDateAfter(date1: Date, date2: Date) {
   return date1.getTime() > date2.getTime();
 }
 

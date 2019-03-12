@@ -5,6 +5,8 @@ import { Month } from 'date-utils';
 
 import { CalendarMonthComponent } from './calendar-month.component';
 
+type MonthStep = 'previous' | 'next';
+
 describe('CalendarMonthComponent', () => {
   const valentinesDay = new Date(2019, Month.February, 14);
   let component: CalendarMonthComponent;
@@ -54,6 +56,44 @@ describe('CalendarMonthComponent', () => {
     // toBe() is used intentionally for checking reference equality
     expect(component.month).toBe(february);
     expect(component.daysOfMonth).toBe(daysOfMonth);
+  });
+
+  describe('month steppers', () => {
+    it('should be visible if displayMonthSteppers is true', () => {
+      component.displayMonthStepper = true;
+
+      fixture.detectChanges();
+
+      expect(getMonthStepperButtons()).toBeTruthy();
+    });
+
+    it('should be hidden if displayMonthSteppers is false', () => {
+      component.displayMonthStepper = false;
+
+      fixture.detectChanges();
+
+      expect(getMonthStepperButtons()).toBeFalsy();
+    });
+
+    it('should emit monthStep on next month click', () => {
+      component.displayMonthStepper = true;
+      spyOn(component.monthStep, 'emit');
+      fixture.detectChanges();
+
+      stepMonth('next');
+
+      expect(component.monthStep.emit).toHaveBeenCalledWith(1);
+    });
+
+    it('should emit monthStep on previous month click', () => {
+      component.displayMonthStepper = true;
+      spyOn(component.monthStep, 'emit');
+      fixture.detectChanges();
+
+      stepMonth('previous');
+
+      expect(component.monthStep.emit).toHaveBeenCalledWith(-1);
+    });
   });
 
   describe('monthCaptionPattern', () => {
@@ -253,6 +293,18 @@ describe('CalendarMonthComponent', () => {
   }
 
   function getCaption() {
-    return fixture.debugElement.query(By.css('.calendar-month-caption')).nativeElement.textContent;
+    return fixture.debugElement.query(By.css('.calendar-month-header__caption')).nativeElement.textContent;
+  }
+
+  function stepMonth(monthStep: MonthStep) {
+    return getMonthStepperButton(monthStep).triggerEventHandler('click', null);
+  }
+
+  function getMonthStepperButton(monthStep: MonthStep) {
+    return fixture.debugElement.query(By.css(`.calendar-month-header__stepper--${monthStep}`));
+  }
+
+  function getMonthStepperButtons() {
+    return fixture.debugElement.query(By.css('.calendar-month-header__stepper'));
   }
 });

@@ -1,4 +1,5 @@
-$gridCellSize: 42px;
+$answerToLifeUniverseAndEverything: 42; // same as 6*9, see http://www.6by9.net/why-6by9/
+$gridCellSize: $answerToLifeUniverseAndEverything * 1px;
 $numberOfDaysInAWeek: 7;
 
 $firstDayOfWeekToDaysOfWeek: (

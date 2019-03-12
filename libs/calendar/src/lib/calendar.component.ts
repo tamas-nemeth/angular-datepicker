@@ -11,7 +11,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 
-import { addMonths, isDate, setDate, startOfDay } from 'date-utils';
+import { addMonths, isDate, startOfDay, startOfMonth } from 'date-utils';
 
 @Component({
   selector: 'lib-calendar',
@@ -30,9 +30,11 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   selectedDate?: Date;
   touched = false;
   disabled = false;
+  displayMonthStepper = true;
 
   private onChange?: (updatedValue: Date) => void;
   private onTouched?: () => void;
+  private monthStepperPosition?: Date;
 
   @Input() firstDayOfWeek: 'SUNDAY' | 'MONDAY' = 'SUNDAY';
   @Input() locale?: string;
@@ -44,6 +46,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   @Input()
   set firstMonth(firstMonth: Date | undefined) {
     this._firstMonth = firstMonth;
+    this.monthStepperPosition = this._firstMonth;
   }
 
   get firstMonth(): Date | undefined {
@@ -55,6 +58,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   @Input()
   set numberOfMonths(numberOfMonths: any) {
     this._numberOfMonths = coerceNumberProperty(numberOfMonths);
+    this.displayMonthStepper = this._numberOfMonths === 1;
   }
 
   get numberOfMonths() {
@@ -75,18 +79,24 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   }
 
   private getMonths() {
-    const firstMonth = this.firstMonth || (this.numberOfMonths === 1 && this.selectedDate ? this.selectedDate : new Date());
-    const startOfFirstMonth = setDate(startOfDay(firstMonth), 1);
+    const firstMonth = (this.numberOfMonths === 1 ? this.monthStepperPosition : this.firstMonth) || new Date();
+    const startOfFirstMonth = startOfMonth(firstMonth);
     return Array.from({length: this.numberOfMonths}, (_, index) => addMonths(startOfFirstMonth, index));
   }
 
   trackByMilliseconds(_: number, month: Date) {
-    return +month;
+    return month.getTime();
+  }
+
+  onMonthStep(step: -1 | 1) {
+    this.monthStepperPosition = addMonths(this.monthStepperPosition || new Date(), step);
+    this.months = this.getMonths();
   }
 
   onPick(date: Date) {
     if (!this.disabled) {
       this.selectedDate = date;
+      this.monthStepperPosition = date;
       if (this.onChange) {
         this.onChange(date);
       }
@@ -100,6 +110,11 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     // TODO: what if calendar or the given date is disabled?
     this.selectedDate = isDate(value) ? startOfDay(value) : undefined;
     this.changeDetectorRef.markForCheck();
+
+    if (this.numberOfMonths === 1 && this.selectedDate) {
+      this.monthStepperPosition = this.selectedDate;
+      this.months = this.getMonths();
+    }
   }
 
   registerOnChange(onChangeCallback: (updatedValue: Date) => void) {

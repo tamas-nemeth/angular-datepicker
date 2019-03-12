@@ -8,5 +8,7 @@
                       [selectedDate]="selectedDate"
                       [min]="min"
                       [monthCaptionPattern]="monthCaptionPattern"
-                      (pick)="onPick($event)"></lib-calendar-month>
+                      [displayMonthStepper]="displayMonthStepper"
+                      (pick)="onPick($event)"
+                      (monthStep)="onMonthStep($event)"></lib-calendar-month>
 </div>

@@ -5,7 +5,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { MockComponent } from 'ng-mocks';
 
-import { Month } from 'date-utils';
+import { addMonths, Month, startOfMonth } from 'date-utils';
 
 import { CalendarComponent } from './calendar.component';
 import { CalendarWeekComponent } from './calendar-week/calendar-week.component';
@@ -35,6 +35,15 @@ class CalendarWrapperComponent {
 
 describe('CalendarComponent', () => {
   const valentinesDay = new Date(2019, Month.February, 14);
+  const piDay = new Date(2019, Month.March, 14);
+  let mockDate: Date;
+  let monthOfMockDate: Date;
+
+  beforeAll(() => {
+    mockDate = valentinesDay;
+    monthOfMockDate = startOfMonth(mockDate);
+    jasmine.clock().mockDate(mockDate);
+  });
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -85,13 +94,6 @@ describe('CalendarComponent', () => {
       expect(getMonthComponentDebugElement().componentInstance.selectedDate).toBe(component.selectedDate);
     });
 
-    it('should bind month input of first monthcomponent to firstMonth', () => {
-      component.firstMonth = new Date(2019, Month.March);
-      fixture.detectChanges();
-
-      expect(getMonthComponentDebugElement().componentInstance.month).toEqual(component.firstMonth);
-    });
-
     it('should have a class with the first day of week', () => {
       component.firstDayOfWeek = 'SUNDAY';
 
@@ -113,20 +115,139 @@ describe('CalendarComponent', () => {
       expect(getCalendarDebugElement().classes['calendar--disabled']).toBe(false);
     });
 
+    it('should display one month component by default', () => {
+      // component.numberOfMonths = undefined;
+      component.firstMonth = new Date(2019, Month.February);
+
+      fixture.detectChanges();
+
+      expect(component.numberOfMonths).toBe(1);
+      expect(getMonths()).toEqual([
+        new Date(2019, Month.February),
+      ]);
+    });
+
+    it('should display the first month in one-month view', () => {
+      component.numberOfMonths = 1;
+      component.firstMonth = new Date(2019, Month.February);
+      fixture.detectChanges();
+
+      expect(getMonths()).toEqual([new Date(2019, Month.February)]);
+    });
+
+    it('should display the current month in one-month view if firstMonth is not specified', () => {
+      component.numberOfMonths = 1;
+      // component.firstMonth = undefined;
+      fixture.detectChanges();
+
+      expect(getMonths()).toEqual([monthOfMockDate]);
+    });
+
     it('should display as many month components as numberOfMonths', () => {
+      component.firstMonth = new Date(2019, Month.February);
       component.numberOfMonths = 3;
-      const expectedMonths = [
+      fixture.detectChanges();
+
+      expect(getMonths()).toEqual([
         new Date(2019, Month.February),
         new Date(2019, Month.March),
         new Date(2019, Month.April),
-      ];
-      fixture.detectChanges();
+      ]);
+    });
 
-      expect(getMonths()).toEqual(expectedMonths);
+    describe('month step', () => {
+      it('should display next month', () => {
+        component.numberOfMonths = 1;
+        component.firstMonth = new Date(2019, Month.February);
+        fixture.detectChanges();
+
+        stepMonth(1);
+        fixture.detectChanges();
+
+        expect(getMonths()).toEqual([new Date(2019, Month.March)]);
+      });
+
+      it('should display month after current one if firstMonth is not specified', () => {
+        component.numberOfMonths = 1;
+        // component.firstMonth = undefined;
+        fixture.detectChanges();
+
+        stepMonth(1);
+        fixture.detectChanges();
+
+        expect(getMonths()).toEqual([addMonths(monthOfMockDate, 1)]);
+      });
+
+      it('should jump to the month of the selected date when switching back to one-month view', () => {
+        component.numberOfMonths = 12;
+        component.firstMonth = new Date(2019, Month.February);
+        fixture.detectChanges();
+
+        pickDate(piDay);
+        component.numberOfMonths = 1;
+        component.ngOnChanges({
+          numberOfMonths: {
+            firstChange: false,
+            previousValue: 12,
+            currentValue: component.numberOfMonths,
+            isFirstChange() { return this.firstChange; }
+          }
+        });
+        fixture.detectChanges();
+
+        expect(getMonths()).toEqual([startOfMonth(piDay)]);
+
+        stepMonth(1);
+        fixture.detectChanges();
+
+        expect(getMonths()).toEqual([new Date(2019, Month.April)]);
+
+        stepMonth(1);
+        fixture.detectChanges();
+
+        expect(getMonths()).toEqual([new Date(2019, Month.May)]);
+      });
+
+      it('should start with the first month when changing to multi-month view, even after stepping', () => {
+        component.numberOfMonths = 1;
+        component.firstMonth = new Date(2019, Month.February);
+        fixture.detectChanges();
+
+        stepMonth(1);
+        fixture.detectChanges();
+
+        expect(getMonths()).toEqual([new Date(2019, Month.March)]);
+
+        stepMonth(1);
+        fixture.detectChanges();
+
+        expect(getMonths()).toEqual([new Date(2019, Month.April)]);
+
+        component.numberOfMonths = 3;
+        component.ngOnChanges({
+          numberOfMonths: {
+            firstChange: false,
+            previousValue: 1,
+            currentValue: component.numberOfMonths,
+            isFirstChange() { return this.firstChange; }
+          }
+        });
+        // just trigger an event that triggers change detection
+        // month won't be stepped in multi-month view
+        stepMonth(1);
+        fixture.detectChanges();
+
+        expect(getMonths()).toEqual([
+          new Date(2019, Month.February),
+          new Date(2019, Month.March),
+          new Date(2019, Month.April)
+        ]);
+      });
     });
 
     describe('ngOnChanges', () => {
       it('should regenerate months when firstMonth changes for NOT the first time', () => {
+        component.numberOfMonths = 1;
         component.firstMonth = new Date(2019, Month.February);
 
         // call ngAfterViewInit
@@ -142,10 +263,9 @@ describe('CalendarComponent', () => {
           }
         });
 
-        const expectedMonths = [
+        expect(component.months).toEqual([
           new Date(2019, Month.March),
-        ];
-        expect(component.months).toEqual(expectedMonths);
+        ]);
       });
 
       it('should NOT regenerate months when firstMonth changes for the first time', () => {
@@ -179,11 +299,10 @@ describe('CalendarComponent', () => {
           }
         });
 
-        const expectedMonths = [
+        expect(component.months).toEqual([
           new Date(2019, Month.February),
           new Date(2019, Month.March),
-        ];
-        expect(component.months).toEqual(expectedMonths);
+        ]);
       });
 
       it('should NOT regenerate months when numberOfMonths changes for the first time', () => {
@@ -202,15 +321,37 @@ describe('CalendarComponent', () => {
       });
     });
 
-    it('should display the month of the selected month in one-month view', () => {
-      component.selectedDate = new Date(2019, Month.March, 3);
-      fixture.detectChanges();
+    describe('displayMonthSteppers', () => {
+      it('should be true by default (one-month view)', () => {
+        component.firstMonth = new Date(2019, Month.February);
+        fixture.detectChanges();
 
-      expect(getMonths()).toEqual([new Date(2019, Month.March, 1)]);
+        expect(component.displayMonthStepper).toBe(true);
+      });
+
+      it('should be true in one-month view', () => {
+        component.firstMonth = new Date(2019, Month.February);
+        component.numberOfMonths = 1;
+        fixture.detectChanges();
+
+        expect(component.displayMonthStepper).toBe(true);
+      });
+
+      it('should be false in multi-month view', () => {
+        component.firstMonth = new Date(2019, Month.February);
+        component.numberOfMonths = 2;
+        fixture.detectChanges();
+
+        expect(component.displayMonthStepper).toBe(false);
+      });
     });
 
     function getMonths() {
       return getMonthComponentDebugElements().map(monthDebugElement => monthDebugElement.componentInstance.month);
+    }
+
+    function stepMonth(step: -1 | 1) {
+      getMonthComponentDebugElement().triggerEventHandler('monthStep', step);
     }
 
     function pickDate(date: Date) {
@@ -313,12 +454,46 @@ describe('CalendarComponent', () => {
       expect(wrapperComponent.calendarComponent.selectedDate).not.toBe(valentinesDay);
     });
 
+    it('should jump to the month of the selected date when switching back to one-month view', () => {
+      wrapperComponent.dateControl.setValue(piDay);
+      fixture.detectChanges();
+
+      expect(getMonths()).toEqual([new Date(2019, Month.March)]);
+
+      stepMonth(1);
+      fixture.detectChanges();
+
+      expect(getMonths()).toEqual([new Date(2019, Month.April)]);
+
+      stepMonth(1);
+      fixture.detectChanges();
+
+      expect(getMonths()).toEqual([new Date(2019, Month.May)]);
+    });
+
+
+    function getMonths() {
+      return getMonthComponentDebugElements().map(monthDebugElement => monthDebugElement.componentInstance.month);
+    }
+
     function pickDate(date: Date) {
       getMonthComponentDebugElement().triggerEventHandler('pick', date);
     }
 
-    function getMonthComponentDebugElement() {
-      return fixture.debugElement.query(By.css('lib-calendar-month'));
+    function stepMonth(step: -1 | 1) {
+      getMonthComponentDebugElement().triggerEventHandler('monthStep', step);
     }
+
+    function getMonthComponentDebugElement() {
+      return getMonthComponentDebugElements()[0];
+    }
+
+    function getMonthComponentDebugElements() {
+      return fixture.debugElement.queryAll(By.css('lib-calendar-month'));
+    }
+  });
+
+  afterAll(() => {
+    jasmine.clock().uninstall();
   });
 });
