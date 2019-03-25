@@ -16,7 +16,7 @@
     @each $dayOfWeek in $daysOfWeek {
       :host-context(.calendar--first-day-of-week-#{$firstDayOfWeek}) &--first-day-#{$dayOfWeek} {
         time:first-child {
-          grid-column-start: index($daysOfWeek, $dayOfWeek);
+          grid-column: index($daysOfWeek, $dayOfWeek);
         }
       }
     }
@@ -30,12 +30,12 @@
     text-transform: uppercase;
     background-color: snow;
     font-weight: bold;
-    grid-template-columns: 42px 5*42px 42px;
+    grid-template-columns: repeat(7, 42px);
     place-items: stretch;
     line-height: 42px;
 
     &__caption {
-      grid-column-start: 2;
+      grid-column: 2 / span 5;
     }
 
     &__caption, &__stepper {
