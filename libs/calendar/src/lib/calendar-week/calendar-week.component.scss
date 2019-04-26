@@ -1,16 +1,11 @@
-@import "../calendar-constants";
+@import "../calendar-mixins";
 
 :host-context(.calendar--disabled) > * {
   opacity: .38;
 }
 
 .calendar-week {
-  display: grid;
-  grid-template-columns: repeat($numberOfDaysInAWeek, $gridCellSize);
-  grid-template-rows: $gridCellSize;
-  place-items: stretch;
-  justify-content: center;
-  grid-auto-flow: dense;
+  @include calendarGrid();
   position: sticky;
   top: 0;
   background-color: white;
@@ -18,13 +13,7 @@
 
   :host-context(.calendar--first-day-of-week-monday) & {
     abbr:first-child {
-      grid-column: 7;
+      order: 1;
     }
-  }
-
-  &__day {
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 }

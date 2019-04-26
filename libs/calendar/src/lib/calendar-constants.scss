@@ -1,8 +1,9 @@
-$answerToLifeUniverseAndEverything: 42; // same as 6*9, see http://www.6by9.net/why-6by9/
-$gridCellSize: $answerToLifeUniverseAndEverything * 1px;
-$numberOfDaysInAWeek: 7;
+$answer-to-life-universe-and-everything: 42; // same as 6*9, see http://www.6by9.net/why-6by9/
+$calendar-cell-size: $answer-to-life-universe-and-everything * 1px;
+$calendar-cell-size--accessible: 3rem;
+$number-of-days-in-a-week: 7;
 
-$firstDayOfWeekToDaysOfWeek: (
+$first-day-of-week-to-days-of-week: (
   sunday: (
     sunday,
     monday,

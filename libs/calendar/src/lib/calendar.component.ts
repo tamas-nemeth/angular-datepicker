@@ -27,7 +27,7 @@ import { addMonths, isDate, startOfDay, startOfMonth } from 'date-utils';
 })
 export class CalendarComponent implements AfterContentInit, ControlValueAccessor, OnChanges {
   months!: Date[];
-  selectedDate?: Date;
+  value?: Date;
   touched = false;
   disabled = false;
   displayMonthStepper = true;
@@ -37,9 +37,10 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   private monthStepperPosition?: Date;
 
   @Input() firstDayOfWeek: 'SUNDAY' | 'MONDAY' = 'SUNDAY';
-  @Input() locale?: string;
   @Input() min?: Date;
   @Input() monthCaptionPattern?: string;
+  // locale input is for demo purposes only - until the Ivy renderer arrives, there is no API for switching the locale at runtime
+  @Input() locale?: string;
 
   private _firstMonth?: Date;
 
@@ -78,12 +79,6 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     }
   }
 
-  private getMonths() {
-    const firstMonth = (this.numberOfMonths === 1 ? this.monthStepperPosition : this.firstMonth) || new Date();
-    const startOfFirstMonth = startOfMonth(firstMonth);
-    return Array.from({length: this.numberOfMonths}, (_, index) => addMonths(startOfFirstMonth, index));
-  }
-
   trackByMilliseconds(_: number, month: Date) {
     return month.getTime();
   }
@@ -93,9 +88,9 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     this.months = this.getMonths();
   }
 
-  onPick(date: Date) {
+  onSelect(date: Date) {
     if (!this.disabled) {
-      this.selectedDate = date;
+      this.value = date;
       this.monthStepperPosition = date;
       if (this.onChange) {
         this.onChange(date);
@@ -108,11 +103,11 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
 
   writeValue(value: Date) {
     // TODO: what if calendar or the given date is disabled?
-    this.selectedDate = isDate(value) ? startOfDay(value) : undefined;
+    this.value = isDate(value) ? startOfDay(value) : undefined;
     this.changeDetectorRef.markForCheck();
 
-    if (this.numberOfMonths === 1 && this.selectedDate) {
-      this.monthStepperPosition = this.selectedDate;
+    if (this.displayMonthStepper && this.value) {
+      this.monthStepperPosition = this.value;
       this.months = this.getMonths();
     }
   }
@@ -131,5 +126,11 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   setDisabledState?(isDisabled: boolean) {
     this.disabled = isDisabled;
     this.changeDetectorRef.markForCheck();
+  }
+
+  private getMonths() {
+    const firstMonth = (this.displayMonthStepper ? this.monthStepperPosition : this.firstMonth) || new Date();
+    const startOfFirstMonth = startOfMonth(firstMonth);
+    return Array.from({length: this.numberOfMonths}, (_, index) => addMonths(startOfFirstMonth, index));
   }
 }

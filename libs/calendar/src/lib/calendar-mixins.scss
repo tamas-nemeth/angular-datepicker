@@ -1,0 +1,20 @@
+@import "calendar-constants";
+
+@mixin calendarGrid() {
+  display: grid;
+  grid-template-columns: repeat(7, $calendar-cell-size);
+  grid-auto-rows: $calendar-cell-size;
+  place-items: stretch;
+  justify-content: center;
+
+  @media (min-width: 360px) {
+    grid-template-columns: repeat($number-of-days-in-a-week, $calendar-cell-size--accessible);
+    grid-auto-rows: $calendar-cell-size--accessible;
+  }
+
+  > * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

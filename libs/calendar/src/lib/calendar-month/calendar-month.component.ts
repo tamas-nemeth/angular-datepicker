@@ -27,17 +27,17 @@ import {
   styleUrls: ['./calendar-month.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CalendarMonthComponent implements OnChanges, AfterViewInit {
+export class CalendarMonthComponent implements AfterViewInit, OnChanges {
   daysOfMonth!: Date[];
   firstDayOfMonth!: string;
 
   private readonly defaultMonthCaptionPattern = 'MMMM y';
   private readonly daySelector = '.calendar-month__day';
 
-  @Input() locale?: string;
   @Input() selectedDate?: Date;
   @Input() min?: Date;
-  @Input() displayMonthStepper = true;
+  @Input() showMonthStepper = true;
+  @Input() locale?: string;
 
   private _month!: Date;
 
@@ -65,7 +65,7 @@ export class CalendarMonthComponent implements OnChanges, AfterViewInit {
     return this._monthCaptionPattern || this.defaultMonthCaptionPattern;
   }
 
-  @Output() pick = new EventEmitter<Date>();
+  @Output() select = new EventEmitter<Date>();
   @Output() monthStep = new EventEmitter<-1 | 1>();
 
   constructor(public changeDetectorRef: ChangeDetectorRef) {}
@@ -81,11 +81,15 @@ export class CalendarMonthComponent implements OnChanges, AfterViewInit {
   }
 
   isSelected(dayOfMonth: Date) {
-    return this.selectedDate && isSameDate(dayOfMonth, this.selectedDate);
+    return !!this.selectedDate && isSameDate(dayOfMonth, this.selectedDate);
   }
 
   isDisabled(dayOfMonth: Date) {
-    return this.min && isDateAfter(this.min, dayOfMonth);
+    return !!this.min && isDateAfter(this.min, dayOfMonth);
+  }
+
+  stepMonth(step: -1 | 1) {
+    this.monthStep.emit(step);
   }
 
   onMonthClick(event: MouseEvent) {
@@ -94,10 +98,6 @@ export class CalendarMonthComponent implements OnChanges, AfterViewInit {
     if (target && target.matches(this.daySelector)) {
       this.onDateClick(target);
     }
-  }
-
-  stepMonth(step: -1 | 1) {
-    this.monthStep.emit(step);
   }
 
   private onDateClick(dateElement: HTMLElement) {
@@ -111,7 +111,7 @@ export class CalendarMonthComponent implements OnChanges, AfterViewInit {
 
   private selectDate(date: Date) {
     if (!this.isSelected(date) && !this.isDisabled(date)) {
-      this.pick.emit(date);
+      this.select.emit(date);
     }
   }
 }

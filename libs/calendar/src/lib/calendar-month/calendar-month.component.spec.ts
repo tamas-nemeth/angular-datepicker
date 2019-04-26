@@ -60,7 +60,7 @@ describe('CalendarMonthComponent', () => {
 
   describe('month steppers', () => {
     it('should be visible if displayMonthSteppers is true', () => {
-      component.displayMonthStepper = true;
+      component.showMonthStepper = true;
 
       fixture.detectChanges();
 
@@ -68,7 +68,7 @@ describe('CalendarMonthComponent', () => {
     });
 
     it('should be hidden if displayMonthSteppers is false', () => {
-      component.displayMonthStepper = false;
+      component.showMonthStepper = false;
 
       fixture.detectChanges();
 
@@ -76,7 +76,7 @@ describe('CalendarMonthComponent', () => {
     });
 
     it('should emit monthStep on next month click', () => {
-      component.displayMonthStepper = true;
+      component.showMonthStepper = true;
       spyOn(component.monthStep, 'emit');
       fixture.detectChanges();
 
@@ -86,7 +86,7 @@ describe('CalendarMonthComponent', () => {
     });
 
     it('should emit monthStep on previous month click', () => {
-      component.displayMonthStepper = true;
+      component.showMonthStepper = true;
       spyOn(component.monthStep, 'emit');
       fixture.detectChanges();
 
@@ -158,7 +158,6 @@ describe('CalendarMonthComponent', () => {
     });
   });
 
-
   it('should have a class with the first day of month', () => {
     component.month = new Date(2019, Month.February, 17);
 
@@ -167,24 +166,24 @@ describe('CalendarMonthComponent', () => {
     expect(getMonthDebugElement().classes['calendar-month--first-day-friday']).toBe(true);
   });
 
-  it('should emit the picked date', () => {
+  it('should emit the selected date', () => {
     component.month = new Date(2019, Month.February);
     fixture.detectChanges();
-    spyOn(component.pick, 'emit');
+    spyOn(component.select, 'emit');
 
     clickDay(14);
 
-    expect(component.pick.emit).toHaveBeenCalledWith(valentinesDay);
+    expect(component.select.emit).toHaveBeenCalledWith(valentinesDay);
   });
 
-  it('should NOT emit a picked date when empty cell is clicked', () => {
+  it('should NOT emit when empty cell is clicked', () => {
     component.month = new Date(2019, Month.February);
     fixture.detectChanges();
-    spyOn(component.pick, 'emit');
+    spyOn(component.select, 'emit');
 
     clickOnMonthElement();
 
-    expect(component.pick.emit).not.toHaveBeenCalled();
+    expect(component.select.emit).not.toHaveBeenCalled();
   });
 
   it('should add --selected class to selected day element', () => {
@@ -220,48 +219,48 @@ describe('CalendarMonthComponent', () => {
     expect(getDayDebugElement(4)!.classes['calendar-month__day--disabled']).toBe(false);
   });
 
-  it('should NOT pick disabled date', () => {
+  it('should NOT select disabled date', () => {
     component.month = new Date(2019, Month.February);
     component.min = new Date(2019, Month.February, 3);
     fixture.detectChanges();
-    spyOn(component.pick, 'emit');
+    spyOn(component.select, 'emit');
 
     clickDay(2);
 
-    expect(component.pick.emit).not.toHaveBeenCalled();
+    expect(component.select.emit).not.toHaveBeenCalled();
   });
 
-  it('should pick minimum date', () => {
+  it('should select minimum date', () => {
     component.month = new Date(2019, Month.February);
     component.min = new Date(2019, Month.February, 3);
     fixture.detectChanges();
-    spyOn(component.pick, 'emit');
+    spyOn(component.select, 'emit');
 
     clickDay(3);
 
-    expect(component.pick.emit).toHaveBeenCalledWith(component.min);
+    expect(component.select.emit).toHaveBeenCalledWith(component.min);
   });
 
-  it('should pick day later than minimum date', () => {
+  it('should select day later than minimum date', () => {
     component.month = new Date(2019, Month.February);
     component.min = new Date(2019, Month.February, 3);
     fixture.detectChanges();
-    spyOn(component.pick, 'emit');
+    spyOn(component.select, 'emit');
 
     clickDay(4);
 
-    expect(component.pick.emit).toHaveBeenCalledWith(new Date(2019, Month.February, 4));
+    expect(component.select.emit).toHaveBeenCalledWith(new Date(2019, Month.February, 4));
   });
 
-  it('should NOT pick same date again', () => {
+  it('should NOT select same date again', () => {
     component.month = new Date(2019, Month.February);
     component.selectedDate = valentinesDay;
     fixture.detectChanges();
-    spyOn(component.pick, 'emit');
+    spyOn(component.select, 'emit');
 
     clickDay(14);
 
-    expect(component.pick.emit).not.toHaveBeenCalled();
+    expect(component.select.emit).not.toHaveBeenCalled();
   });
 
   function clickDay(dayOfMonth: number) {

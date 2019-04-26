@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-import { NumericDayOfWeek, setDayOfWeek, startOfDay } from 'date-utils';
+import { NumericDayOfWeek, setDay, startOfDay } from 'date-utils';
 
 @Component({
   selector: 'lib-calendar-week',
@@ -10,6 +10,6 @@ import { NumericDayOfWeek, setDayOfWeek, startOfDay } from 'date-utils';
 })
 export class CalendarWeekComponent {
   private readonly today = startOfDay(new Date());
-  daysOfWeek = Array.from({length: 7}, (_, index) => setDayOfWeek(this.today, index as NumericDayOfWeek));
+  daysOfWeek = Array.from({length: 7}, (_, index) => setDay(this.today, index as NumericDayOfWeek));
   @Input() locale?: string;
 }

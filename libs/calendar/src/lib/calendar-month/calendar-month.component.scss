@@ -1,4 +1,5 @@
 @import "../calendar-constants";
+@import "../calendar-mixins";
 
 :host-context(.calendar--disabled) > * {
   opacity: .38;
@@ -6,13 +7,9 @@
 }
 
 .calendar-month {
-  display: grid;
-  grid-template-columns: repeat($numberOfDaysInAWeek, $gridCellSize);
-  grid-auto-rows: $gridCellSize;
-  place-items: stretch;
-  justify-content: center;
+  @include calendarGrid();
 
-  @each $firstDayOfWeek, $daysOfWeek in $firstDayOfWeekToDaysOfWeek {
+  @each $firstDayOfWeek, $daysOfWeek in $first-day-of-week-to-days-of-week {
     @each $dayOfWeek in $daysOfWeek {
       :host-context(.calendar--first-day-of-week-#{$firstDayOfWeek}) &--first-day-#{$dayOfWeek} {
         time:first-child {
@@ -23,25 +20,17 @@
   }
 
   &-header {
-    display: grid;
-    grid-template-rows: $gridCellSize;
-    align-items: center;
-    justify-content: center;
+    @include calendarGrid();
+    line-height: $calendar-cell-size;
+    @media (min-width: 360px) {
+      line-height: $calendar-cell-size--accessible;
+    }
     text-transform: uppercase;
     background-color: snow;
     font-weight: bold;
-    grid-template-columns: repeat(7, 42px);
-    place-items: stretch;
-    line-height: 42px;
 
     &__caption {
       grid-column: 2 / span 5;
-    }
-
-    &__caption, &__stepper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     &__stepper {
@@ -50,9 +39,6 @@
   }
 
   &__day {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     cursor: pointer;
 
     &--selected {

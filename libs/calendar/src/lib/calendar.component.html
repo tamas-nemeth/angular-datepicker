@@ -4,11 +4,11 @@
   <lib-calendar-week [locale]="locale"></lib-calendar-week>
   <lib-calendar-month *ngFor="let month of months; trackBy: trackByMilliseconds"
                       [month]="month"
-                      [locale]="locale"
-                      [selectedDate]="selectedDate"
+                      [selectedDate]="value"
                       [min]="min"
                       [monthCaptionPattern]="monthCaptionPattern"
-                      [displayMonthStepper]="displayMonthStepper"
-                      (pick)="onPick($event)"
+                      [showMonthStepper]="displayMonthStepper"
+                      [locale]="locale"
+                      (select)="onSelect($event)"
                       (monthStep)="onMonthStep($event)"></lib-calendar-month>
 </div>

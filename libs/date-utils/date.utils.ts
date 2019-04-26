@@ -1,6 +1,6 @@
 import { NumericDayOfWeek } from './day-of-week';
 
-export function setDayOfWeek(date: Date, dayOfWeek: NumericDayOfWeek) {
+export function setDay(date: Date, dayOfWeek: NumericDayOfWeek) {
   return addDays(date, dayOfWeek - date.getDay());
 }
 
