@@ -1,18 +1,33 @@
 @import "calendar-constants";
 
 @mixin calendarGrid() {
+  // flex container fallback
+  display: flex;
+  flex-wrap: wrap;
+  width: $number-of-days-in-a-week * $calendar-cell-size--accessible;
+  margin: 0 auto;
+  line-height: $calendar-cell-size--accessible;
+  // grid container
   display: grid;
   grid-template-columns: repeat(7, $calendar-cell-size);
   grid-auto-rows: $calendar-cell-size;
-  place-items: stretch;
-  justify-content: center;
-
   @media (min-width: 360px) {
     grid-template-columns: repeat($number-of-days-in-a-week, $calendar-cell-size--accessible);
     grid-auto-rows: $calendar-cell-size--accessible;
   }
+  // IE does not support the @supports query
+  @supports (display: grid) {
+    width: auto;
+    margin: 0;
+    line-height: initial;
+    // the flex fallback needs justify-content: flex-start (default)
+    justify-content: center;
+  }
 
   > * {
+    // flex item fallback
+    flex-basis: $calendar-cell-size--accessible;
+    // grid item
     display: flex;
     justify-content: center;
     align-items: center;

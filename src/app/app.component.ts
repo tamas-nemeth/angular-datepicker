@@ -6,7 +6,7 @@ import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { startOfDay, toISODateString } from 'date-utils';
 
 @Component({
-  selector: 'nghu-root',
+  selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -15,8 +15,8 @@ export class AppComponent {
   private readonly today = startOfDay(new Date());
 
   localeToMonthCaptionPattern: {[locale: string]: string | undefined} = {
-    'en': 'MMMM y',
-    'hu': 'y. MMMM',
+    en: 'MMMM y',
+    hu: 'y. MMMM',
   };
 
   firstDayOfWeekControl = new FormControl('MONDAY');

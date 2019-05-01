@@ -123,7 +123,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     };
   }
 
-  setDisabledState?(isDisabled: boolean) {
+  setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
     this.changeDetectorRef.markForCheck();
   }

@@ -13,7 +13,13 @@
     @each $dayOfWeek in $daysOfWeek {
       :host-context(.calendar--first-day-of-week-#{$firstDayOfWeek}) &--first-day-#{$dayOfWeek} {
         time:first-child {
+          // flex item fallback
+          margin-left: (index($daysOfWeek, $dayOfWeek) - 1) * $calendar-cell-size--accessible;
+          // grid item
           grid-column: index($daysOfWeek, $dayOfWeek);
+          @supports (display: grid) {
+            margin-left: 0;
+          }
         }
       }
     }
@@ -21,20 +27,15 @@
 
   &-header {
     @include calendarGrid();
-    line-height: $calendar-cell-size;
-    @media (min-width: 360px) {
-      line-height: $calendar-cell-size--accessible;
-    }
     text-transform: uppercase;
     background-color: snow;
     font-weight: bold;
 
     &__caption {
+      // flex item fallback
+      flex-grow: 1;
+      // grid item
       grid-column: 2 / span 5;
-    }
-
-    &__stepper {
-      cursor: pointer;
     }
   }
 

@@ -1,0 +1,9 @@
+@import "utils";
+
+.form-control {
+  margin-bottom: pxToRem(8px);
+
+  label {
+    padding-right: pxToRem(8px);
+  }
+}

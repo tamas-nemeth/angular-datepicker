@@ -7,7 +7,7 @@
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
-      "prefix": "nghu",
+      "prefix": "app",
       "schematics": {
         "@schematics/angular:component": {
           "styleext": "scss",
@@ -30,7 +30,13 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "libs/shared-scss"
+              ]
+            },
+            "scripts": [],
+            "es5BrowserSupport": true
           },
           "configurations": {
             "production": {
@@ -86,6 +92,11 @@
             "styles": [
               "src/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "libs/shared-scss"
+              ]
+            },
             "scripts": [],
             "assets": [
               "src/favicon.ico",
@@ -153,7 +164,12 @@
           "options": {
             "main": "libs/calendar/src/test.ts",
             "tsConfig": "libs/calendar/tsconfig.spec.json",
-            "karmaConfig": "libs/calendar/karma.conf.js"
+            "karmaConfig": "libs/calendar/karma.conf.js",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "libs/shared-scss"
+              ]
+            }
           }
         },
         "lint": {

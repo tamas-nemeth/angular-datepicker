@@ -1,21 +1,33 @@
 <div class="calendar-month-header">
-  <span class="calendar-month-header__stepper calendar-month-header__stepper--previous"
-        *ngIf="showMonthStepper"
-        (click)="stepMonth(-1)">◀</span>
-  <span class="calendar-month-header__caption">{{month | date:monthCaptionPattern:undefined:locale}}</span>
-  <span class="calendar-month-header__stepper calendar-month-header__stepper--next"
-        *ngIf="showMonthStepper"
-        (click)="stepMonth(1)">▶</span>
+  <button class="calendar-month-header__stepper calendar-month-header__stepper--previous"
+          *ngIf="showMonthStepper"
+          (click)="stepMonth(-1)"
+          type="button"
+          aria-label="Previous month"
+  >◀</button>
+  <span class="calendar-month-header__caption" role="heading">{{month | date:monthCaptionPattern:undefined:locale}}</span>
+  <button class="calendar-month-header__stepper calendar-month-header__stepper--next"
+          *ngIf="showMonthStepper"
+          (click)="stepMonth(1)"
+          type="button"
+          aria-label="Next month"
+  >▶</button>
 </div>
 <div class="calendar-month"
      [ngClass]="[
        'calendar-month--first-day-' + firstDayOfMonth
      ]"
-     (click)="onMonthClick($event)">
+     (click)="onMonthClick($event)"
+     role="grid">
   <time class="calendar-month__day"
-        *ngFor="let dayOfMonth of daysOfMonth"
+        *ngFor="let dayOfMonth of daysOfMonth; let i = index"
         [attr.datetime]="dayOfMonth | date:'yyyy-MM-dd'"
         [class.calendar-month__day--selected]="isSelected(dayOfMonth)"
         [class.calendar-month__day--disabled]="isDisabled(dayOfMonth)"
+        tabindex="i && -1"
+        role="gridcell"
+        [attr.aria-selected]="isSelected(dayOfMonth)"
+        [attr.aria-disabled]="isDisabled(dayOfMonth)"
+        [attr.aria-label]="dayOfMonth | date:'fullDate':undefined:locale"
   >{{dayOfMonth | date:'d'}}</time>
 </div>
