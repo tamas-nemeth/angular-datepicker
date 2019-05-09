@@ -18,14 +18,15 @@
        'calendar-month--first-day-' + firstDayOfMonth
      ]"
      (click)="onMonthClick($event)"
+     (keyup.enter)="onMonthClick($event)"
      role="grid">
   <time class="calendar-month__day"
-        *ngFor="let dayOfMonth of daysOfMonth; let i = index"
+        *ngFor="let dayOfMonth of daysOfMonth"
         [attr.datetime]="dayOfMonth | date:'yyyy-MM-dd'"
         [class.calendar-month__day--selected]="isSelected(dayOfMonth)"
         [class.calendar-month__day--disabled]="isDisabled(dayOfMonth)"
-        tabindex="i && -1"
         role="gridcell"
+        [tabIndex]="isSelected(dayOfMonth) ? 0 : -1"
         [attr.aria-selected]="isSelected(dayOfMonth)"
         [attr.aria-disabled]="isDisabled(dayOfMonth)"
         [attr.aria-label]="dayOfMonth | date:'fullDate':undefined:locale"

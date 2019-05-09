@@ -16,4 +16,10 @@
       order: 1;
     }
   }
+
+  &__day {
+    @include calendarGridCell();
+    font-variant: none;
+    text-decoration: none;
+  }
 }

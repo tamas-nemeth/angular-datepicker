@@ -321,12 +321,12 @@ describe('CalendarComponent', () => {
       });
     });
 
-    describe('displayMonthSteppers', () => {
+    describe('showMonthStepper', () => {
       it('should be true by default (one-month view)', () => {
         component.firstMonth = new Date(2019, Month.February);
         fixture.detectChanges();
 
-        expect(component.displayMonthStepper).toBe(true);
+        expect(component.showMonthStepper).toBe(true);
       });
 
       it('should be true in one-month view', () => {
@@ -334,7 +334,7 @@ describe('CalendarComponent', () => {
         component.numberOfMonths = 1;
         fixture.detectChanges();
 
-        expect(component.displayMonthStepper).toBe(true);
+        expect(component.showMonthStepper).toBe(true);
       });
 
       it('should be false in multi-month view', () => {
@@ -342,7 +342,7 @@ describe('CalendarComponent', () => {
         component.numberOfMonths = 2;
         fixture.detectChanges();
 
-        expect(component.displayMonthStepper).toBe(false);
+        expect(component.showMonthStepper).toBe(false);
       });
     });
 

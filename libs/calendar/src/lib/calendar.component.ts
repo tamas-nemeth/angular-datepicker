@@ -30,7 +30,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   value?: Date;
   touched = false;
   disabled = false;
-  displayMonthStepper = true;
+  showMonthStepper = true;
 
   private onChange?: (updatedValue: Date) => void;
   private onTouched?: () => void;
@@ -59,7 +59,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   @Input()
   set numberOfMonths(numberOfMonths: any) {
     this._numberOfMonths = coerceNumberProperty(numberOfMonths);
-    this.displayMonthStepper = this._numberOfMonths === 1;
+    this.showMonthStepper = this._numberOfMonths === 1;
   }
 
   get numberOfMonths() {
@@ -106,7 +106,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     this.value = isDate(value) ? startOfDay(value) : undefined;
     this.changeDetectorRef.markForCheck();
 
-    if (this.displayMonthStepper && this.value) {
+    if (this.showMonthStepper && this.value) {
       this.monthStepperPosition = this.value;
       this.months = this.getMonths();
     }
@@ -129,7 +129,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   }
 
   private getMonths() {
-    const firstMonth = (this.displayMonthStepper ? this.monthStepperPosition : this.firstMonth) || new Date();
+    const firstMonth = (this.showMonthStepper ? this.monthStepperPosition : this.firstMonth) || new Date();
     const startOfFirstMonth = startOfMonth(firstMonth);
     return Array.from({length: this.numberOfMonths}, (_, index) => addMonths(startOfFirstMonth, index));
   }

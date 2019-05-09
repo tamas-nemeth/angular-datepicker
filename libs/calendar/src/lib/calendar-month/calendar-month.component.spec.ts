@@ -59,7 +59,7 @@ describe('CalendarMonthComponent', () => {
   });
 
   describe('month steppers', () => {
-    it('should be visible if displayMonthSteppers is true', () => {
+    it('should be visible if showMonthStepper is true', () => {
       component.showMonthStepper = true;
 
       fixture.detectChanges();
@@ -67,7 +67,7 @@ describe('CalendarMonthComponent', () => {
       expect(getMonthStepperButtons()).toBeTruthy();
     });
 
-    it('should be hidden if displayMonthSteppers is false', () => {
+    it('should be hidden if showMonthStepper is false', () => {
       component.showMonthStepper = false;
 
       fixture.detectChanges();
