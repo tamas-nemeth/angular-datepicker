@@ -1,4 +1,13 @@
+@import '~@angular/cdk/overlay-prebuilt.css';
+@import '~@angular/cdk/a11y-prebuilt.css';
+
 body {
   font-family: sans-serif;
   margin: 0;
+}
+
+.overlay__panel {
+  background-color: white;
+  // box shadow taken from angular material
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 }

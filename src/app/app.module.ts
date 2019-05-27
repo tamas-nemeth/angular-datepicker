@@ -5,6 +5,7 @@ import localeHu from '@angular/common/locales/hu';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { CalendarModule } from 'calendar';
+import { ModalModule } from 'modal';
 
 import { AppComponent } from './app.component';
 
@@ -16,10 +17,11 @@ registerLocaleData(localeHu);
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     CalendarModule,
-    ReactiveFormsModule
+    ModalModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

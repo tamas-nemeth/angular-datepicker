@@ -32,6 +32,10 @@ export function startOfMonth(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), 1);
 }
 
+export function getDaysOfMonth(month: Date) {
+  return Array.from({length: numberOfDaysInMonth(month)}, (_, index) => setDate(month, index + 1));
+}
+
 export function numberOfDaysInMonth(date: Date) {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 }

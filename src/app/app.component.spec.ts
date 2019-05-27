@@ -1,9 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { MockComponent } from 'ng-mocks';
+import { MockComponent, MockDirective } from 'ng-mocks';
 
 import { CalendarComponent } from 'calendar';
+import { ModalComponent, ModalToggleDirective } from 'modal';
 
 import { AppComponent } from './app.component';
 
@@ -19,6 +20,8 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent,
         MockComponent(CalendarComponent),
+        MockComponent(ModalComponent),
+        MockDirective(ModalToggleDirective)
       ],
     }).compileComponents();
   }));

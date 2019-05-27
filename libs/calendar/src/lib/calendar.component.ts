@@ -3,9 +3,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   forwardRef,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -66,6 +68,8 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     return this._numberOfMonths;
   }
 
+  @Output() change = new EventEmitter<Date>();
+
   constructor(public changeDetectorRef: ChangeDetectorRef) {}
 
   ngAfterContentInit() {
@@ -92,6 +96,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     if (!this.disabled) {
       this.value = date;
       this.monthStepperPosition = date;
+      this.change.emit(date);
       if (this.onChange) {
         this.onChange(date);
       }

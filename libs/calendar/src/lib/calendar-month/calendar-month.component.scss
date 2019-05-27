@@ -48,7 +48,7 @@
     }
   }
 
-  &__day {
+  &__date {
     @include calendarGridCell();
     cursor: pointer;
 

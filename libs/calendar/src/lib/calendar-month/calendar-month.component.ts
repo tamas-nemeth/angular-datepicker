@@ -10,16 +10,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 
-import {
-  areDatesInSameMonth,
-  DayOfWeek,
-  isDateAfter,
-  isSameDate,
-  numberOfDaysInMonth,
-  NumericDayOfWeek,
-  setDate,
-  startOfDay
-} from 'date-utils';
+import { areDatesInSameMonth, DayOfWeek, getDaysOfMonth, isDateAfter, isSameDate, NumericDayOfWeek, startOfDay } from 'date-utils';
 
 @Component({
   selector: 'lib-calendar-month',
@@ -32,7 +23,7 @@ export class CalendarMonthComponent implements AfterViewInit, OnChanges {
   firstDayOfMonth!: string;
 
   private readonly defaultMonthCaptionPattern = 'MMMM y';
-  private readonly daySelector = '.calendar-month__day';
+  private readonly dateSelector = '.calendar-month__date';
 
   @Input() selectedDate?: Date;
   @Input() min?: Date;
@@ -45,7 +36,7 @@ export class CalendarMonthComponent implements AfterViewInit, OnChanges {
   set month(month: Date) {
     if (!this._month || !areDatesInSameMonth(this._month, month)) {
       this._month = month;
-      this.daysOfMonth = Array.from({length: numberOfDaysInMonth(this._month)}, (_, index) => setDate(this._month, index + 1));
+      this.daysOfMonth = getDaysOfMonth(this._month);
       this.firstDayOfMonth = DayOfWeek[this.daysOfMonth[0].getDay() as NumericDayOfWeek].toLowerCase();
     }
   }
@@ -95,7 +86,7 @@ export class CalendarMonthComponent implements AfterViewInit, OnChanges {
   onMonthClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
 
-    if (target && target.matches(this.daySelector)) {
+    if (target && target.matches(this.dateSelector)) {
       this.onDateClick(target);
     }
   }

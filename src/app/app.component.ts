@@ -23,6 +23,7 @@ export class AppComponent {
   localeControl = new FormControl('');
   minControl = new FormControl(toISODateString(new Date()));
   dateControl = new FormControl();
+  datepickerControl = new FormControl();
   disabledControl = new FormControl(false);
   numberOfMonthsControl = new FormControl(1);
   monthCaptionPatternControl = new FormControl();
@@ -50,10 +51,6 @@ export class AppComponent {
     map(isoDate => new Date(isoDate))
   );
 
-  selectToday() {
-    this.dateControl.setValue(this.today);
-  }
-
   constructor() {
     this.disabledControl.valueChanges.pipe(
       distinctUntilChanged()
@@ -64,5 +61,9 @@ export class AppComponent {
         this.dateControl.enable();
       }
     });
+  }
+
+  selectToday() {
+    this.dateControl.setValue(this.today);
   }
 }

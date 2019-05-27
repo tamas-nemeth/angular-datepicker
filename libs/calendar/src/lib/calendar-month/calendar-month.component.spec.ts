@@ -191,7 +191,7 @@ describe('CalendarMonthComponent', () => {
     component.selectedDate = valentinesDay;
     fixture.detectChanges();
 
-    expect(getDayDebugElement(14)!.classes['calendar-month__day--selected']).toBe(true);
+    expect(getDayDebugElement(14)!.classes['calendar-month__date--selected']).toBe(true);
   });
 
   it('should add --disabled class to a day earlier than minimum date', () => {
@@ -199,8 +199,8 @@ describe('CalendarMonthComponent', () => {
     component.min = new Date(2019, Month.February, 3);
     fixture.detectChanges();
 
-    expect(getDayDebugElement(1)!.classes['calendar-month__day--disabled']).toBe(true);
-    expect(getDayDebugElement(2)!.classes['calendar-month__day--disabled']).toBe(true);
+    expect(getDayDebugElement(1)!.classes['calendar-month__date--disabled']).toBe(true);
+    expect(getDayDebugElement(2)!.classes['calendar-month__date--disabled']).toBe(true);
   });
 
   it('should NOT add --disabled class to minimum date', () => {
@@ -208,7 +208,7 @@ describe('CalendarMonthComponent', () => {
     component.min = new Date(2019, Month.February, 3);
     fixture.detectChanges();
 
-    expect(getDayDebugElement(3)!.classes['calendar-month__day--disabled']).toBe(false);
+    expect(getDayDebugElement(3)!.classes['calendar-month__date--disabled']).toBe(false);
   });
 
   it('should NOT add --disabled class to a day later than minimum date', () => {
@@ -216,7 +216,7 @@ describe('CalendarMonthComponent', () => {
     component.min = new Date(2019, Month.February, 3);
     fixture.detectChanges();
 
-    expect(getDayDebugElement(4)!.classes['calendar-month__day--disabled']).toBe(false);
+    expect(getDayDebugElement(4)!.classes['calendar-month__date--disabled']).toBe(false);
   });
 
   it('should NOT select disabled date', () => {
@@ -278,13 +278,17 @@ describe('CalendarMonthComponent', () => {
   }
 
   function getDayDebugElement(dayOfMonth: number) {
-    return fixture.debugElement.queryAll(By.css('.calendar-month__day'))
+    return getDayDebugElements()
       .find(dayDebugElement => dayDebugElement.nativeElement.textContent === `${dayOfMonth}`);
   }
 
   function getDaysOfMonth() {
-    return fixture.debugElement.queryAll(By.css('.calendar-month__day'))
+    return getDayDebugElements()
       .map(dayOfWeekDebugElement => dayOfWeekDebugElement.nativeElement.textContent);
+  }
+
+  function getDayDebugElements() {
+    return fixture.debugElement.queryAll(By.css('.calendar-month__date'));
   }
 
   function getMonthDebugElement() {

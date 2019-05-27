@@ -84,6 +84,16 @@ describe('CalendarComponent', () => {
       expect(component.value).toBe(valentinesDay);
     });
 
+    it('should emit a change on monthcomponent select event', () => {
+      fixture.detectChanges();
+      spyOn(component.change, 'emit');
+
+      selectDate(valentinesDay);
+      fixture.detectChanges();
+
+      expect(component.change.emit).toHaveBeenCalledWith(valentinesDay);
+    });
+
     it('should bind value input of monthcomponent to value', () => {
       fixture.detectChanges();
 
@@ -447,11 +457,15 @@ describe('CalendarComponent', () => {
     });
 
     it('should not select date when disabled', () => {
+      spyOn(wrapperComponent.calendarComponent.change, 'emit');
+
       wrapperComponent.dateControl.disable();
       selectDate(valentinesDay);
 
       // toBe() is used intentionally for checking reference equality
       expect(wrapperComponent.calendarComponent.value).not.toBe(valentinesDay);
+      expect(wrapperComponent.dateControl.value).not.toBe(valentinesDay);
+      expect(wrapperComponent.calendarComponent.change.emit).not.toHaveBeenCalled();
     });
 
     it('should jump to the month of the selected date when switching back to one-month view', () => {
@@ -470,7 +484,6 @@ describe('CalendarComponent', () => {
 
       expect(getMonths()).toEqual([new Date(2019, Month.May)]);
     });
-
 
     function getMonths() {
       return getMonthComponentDebugElements().map(monthDebugElement => monthDebugElement.componentInstance.month);

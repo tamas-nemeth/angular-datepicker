@@ -1,15 +1,30 @@
 <form [formGroup]="demoFormGroup">
-  <fieldset>
-    <legend>Calendar inputs</legend>
+  <fieldset class="fieldset">
+    <legend>Datepicker with custom input and button, default calendar settings</legend>
 
     <div class="form-control">
-      <label>First day of week</label>
-      <input type="radio" formControlName="firstDayOfWeek" value="SUNDAY" id="sunday"><label for="sunday">Sunday</label>
-      <input type="radio" formControlName="firstDayOfWeek" value="MONDAY" id="monday"><label for="monday">Monday</label>
+      <label for="datepicker" class="form-control__label">Deadline for next feature</label><br>
+      <span libModalToggle [modal]="datepickerModal">
+        <input type="text" readonly id="datepicker" placeholder="Select date" [value]="datepickerControl.value | date">
+        <button type="button">📅</button>
+      </span>
+    </div>
+    <lib-modal #datepickerModal>
+      <lib-calendar [formControl]="datepickerControl" id="datepicker-calendar" (change)="datepickerModal.toggleOverlay()"></lib-calendar>
+    </lib-modal>
+  </fieldset>
+
+  <fieldset class="fieldset">
+    <legend>CalendarComponent's inputs (update the calendar below)</legend>
+
+    <div class="form-control">
+      <label class="form-control__label">First day of week</label>
+      <input type="radio" formControlName="firstDayOfWeek" value="SUNDAY" id="sunday"><label for="sunday" class="form-control__label">Sunday</label>
+      <input type="radio" formControlName="firstDayOfWeek" value="MONDAY" id="monday"><label for="monday" class="form-control__label">Monday</label>
     </div>
 
     <div class="form-control">
-      <label for="locale">Locale</label>
+      <label for="locale" class="form-control__label">Locale</label>
       <select id="locale" formControlName="locale">
         <option value="">Default</option>
         <option value="en">English</option>
@@ -18,34 +33,34 @@
     </div>
 
     <div class="form-control">
-      <label for="min">Minimum date</label>
+      <label for="min" class="form-control__label">Minimum date</label>
       <input type="date" id="min" formControlName="min" placeholder="YYYY-MM-DD">
     </div>
 
     <div class="form-control">
-      <label for="first-month">First month</label>
+      <label for="first-month" class="form-control__label">First month</label>
       <input type="date" id="first-month" formControlName="firstMonth" placeholder="YYYY-MM-DD">
     </div>
 
     <div class="form-control">
-      <label for="number-of-months">Number of months</label>
+      <label for="number-of-months" class="form-control__label">Number of months</label>
       <input type="number" id="number-of-months" formControlName="numberOfMonths" min="1" max="1200">
     </div>
 
     <div class="form-control">
-      <label for="month-caption-pattern">Month caption pattern</label>
+      <label for="month-caption-pattern" class="form-control__label">Month caption pattern</label>
       <input type="text" id="month-caption-pattern" formControlName="monthCaptionPattern" placeholder="y, MMMM">
     </div>
 
     <div class="form-control">
-      <label for="disabled">Disabled</label>
+      <label for="disabled" class="form-control__label">Disabled</label>
       <input id="disabled" type="checkbox" formControlName="disabled">
     </div>
 
     <button (click)="selectToday()" class="form-control" type="button">Select today</button>
 
     <div class="form-control">
-      <label for="selected-date">Selected date</label>:
+      <label for="selected-date" class="form-control__label">Selected date</label>:
       <output id="selected-date" for="calendar">{{dateControl.value | date}}</output>
     </div>
   </fieldset>

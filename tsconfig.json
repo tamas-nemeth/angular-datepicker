@@ -24,11 +24,9 @@
       "dom"
     ],
     "paths": {
-      "calendar": [
-        "libs/calendar/src/public_api.ts"
-      ],
-      "date-utils": [
-        "libs/date-utils"
+      "*": [
+        "libs/*",
+        "libs/*/src/public-api"
       ]
     }
   }
