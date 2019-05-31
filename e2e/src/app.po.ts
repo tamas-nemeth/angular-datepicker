@@ -1,11 +1,11 @@
-import { browser, by, element } from 'protractor';
+import { browser } from 'protractor';
 
 export class AppPage {
   navigateTo() {
-    return browser.get('/');
+    return browser.get(browser.baseUrl) as Promise<any>;
   }
 
-  getTitleText() {
-    return element(by.css('nghu-root h1')).getText();
+  getTitle() {
+    return browser.getTitle() as Promise<string>;
   }
 }

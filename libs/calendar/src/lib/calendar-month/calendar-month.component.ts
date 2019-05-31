@@ -79,8 +79,8 @@ export class CalendarMonthComponent implements AfterViewInit, OnChanges {
     return !!this.min && isDateAfter(this.min, dayOfMonth);
   }
 
-  stepMonth(step: number) {
-    this.monthStep.emit(step as -1 | 1);
+  stepMonth(step: -1 | 1) {
+    this.monthStep.emit(step);
   }
 
   onMonthClick(event: MouseEvent) {

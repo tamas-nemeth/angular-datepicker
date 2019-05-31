@@ -14,7 +14,7 @@ import { ModalComponent } from './modal.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 class ModalToggleHostComponent {
-  @ViewChild(ModalToggleDirective) modalToggleDirective!: ModalToggleDirective;
+  @ViewChild(ModalToggleDirective, {static: false}) modalToggleDirective!: ModalToggleDirective;
 }
 
 describe('ModalToggleDirective', () => {

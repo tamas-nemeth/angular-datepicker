@@ -29,7 +29,7 @@ class CalendarWrapperComponent {
   locale?: string;
   monthCaptionPattern?: string;
   firstDayOfWeek?: 'MONDAY' | 'SUNDAY';
-  @ViewChild(CalendarComponent) calendarComponent!: CalendarComponent;
+  @ViewChild(CalendarComponent, {static: false}) calendarComponent!: CalendarComponent;
   dateControl = new FormControl(defaultDate);
 }
 
