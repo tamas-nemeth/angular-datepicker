@@ -1,7 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeHu from '@angular/common/locales/hu';
+import { By } from '@angular/platform-browser';
 
 import { CalendarWeekComponent } from './calendar-week.component';
 
@@ -9,42 +10,109 @@ describe('CalendarWeekComponent', () => {
   let component: CalendarWeekComponent;
   let fixture: ComponentFixture<CalendarWeekComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [CalendarWeekComponent]
-    })
-      .compileComponents();
-  }));
+  describe('', () => {
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        declarations: [CalendarWeekComponent]
+      })
+        .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(CalendarWeekComponent);
-    component = fixture.componentInstance;
+    beforeEach(() => {
+      fixture = TestBed.createComponent(CalendarWeekComponent);
+      component = fixture.componentInstance;
+    });
+
+    it('should create', () => {
+      fixture.detectChanges();
+
+      expect(component).toBeTruthy();
+    });
+
+    it('should display the 7 days of the week', () => {
+      const narrowDaysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+
+      fixture.detectChanges();
+
+      expect(getDaysOfWeek()).toEqual(narrowDaysOfWeek);
+    });
+
+    it('should display the 7 days of the week with the proper attributes', () => {
+      const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+      fixture.detectChanges();
+
+      expect(getDayOfWeekTitles()).toEqual(daysOfWeek);
+      expect(getDayOfWeekAriaLabels()).toEqual(daysOfWeek);
+    });
+
+    it('should display the 7 days of the week in Hungarian if locale is set to hu', () => {
+      registerLocaleData(localeHu);
+      const daysOfWeek = ['V', 'H', 'K', 'Sz', 'Cs', 'P', 'Sz'];
+      component.locale = 'hu';
+
+      fixture.detectChanges();
+
+      expect(getDaysOfWeek()).toEqual(daysOfWeek);
+    });
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  describe('localisation', () => {
+    let localeId = 'en-US';
+
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        declarations: [CalendarWeekComponent],
+        providers: [
+          {provide: LOCALE_ID, useFactory: () => localeId}
+        ]
+      })
+        .compileComponents();
+    }));
+
+    beforeEach(() => {
+      registerLocaleData(localeHu);
+      localeId = 'hu';
+
+      fixture = TestBed.createComponent(CalendarWeekComponent);
+      component = fixture.componentInstance;
+    });
+
+    it('should display the 7 days of the week in Hungarian if locale is set to hu', () => {
+      const daysOfWeek = ['V', 'H', 'K', 'Sz', 'Cs', 'P', 'Sz'];
+      fixture.detectChanges();
+
+      expect(getDaysOfWeek()).toEqual(daysOfWeek);
+    });
+
+    describe('locale', () => {
+      it('should default to LOCALE_ID before init', () => {
+        fixture.detectChanges();
+        expect(component.locale).toBe('hu');
+      });
+
+      it('should default to LOCALE_ID after init', () => {
+        expect(component.locale).toBe('hu');
+      });
+    });
   });
 
-  it('should display the 7 days of the week', () => {
-    const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  function getDayOfWeekTitles() {
+    return getDayOfWeekDebugElements()
+      .map(dayOfWeekDebugElement => dayOfWeekDebugElement.properties.title);
+  }
 
-    fixture.detectChanges();
-
-    expect(getDaysOfWeek()).toEqual(daysOfWeek);
-  });
-
-  it('should display the 7 days of the week in Hungarian if locale is set to hu', () => {
-    registerLocaleData(localeHu);
-    const daysOfWeek = ['V', 'H', 'K', 'Sz', 'Cs', 'P', 'Sz'];
-    component.locale = 'hu';
-
-    fixture.detectChanges();
-
-    expect(getDaysOfWeek()).toEqual(daysOfWeek);
-  });
+  function getDayOfWeekAriaLabels() {
+    return getDayOfWeekDebugElements()
+      .map(dayOfWeekDebugElement => dayOfWeekDebugElement.attributes['aria-label']);
+  }
 
   function getDaysOfWeek() {
-    return fixture.debugElement.queryAll(By.css('.calendar-week__day'))
+    return getDayOfWeekDebugElements()
       .map(dayOfWeekDebugElement => dayOfWeekDebugElement.nativeElement.textContent);
+  }
+
+  function getDayOfWeekDebugElements() {
+    return fixture.debugElement.queryAll(By.css('.calendar-week__day'));
   }
 });

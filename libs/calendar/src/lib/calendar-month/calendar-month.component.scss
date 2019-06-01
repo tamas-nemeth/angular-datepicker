@@ -9,42 +9,19 @@
 .calendar-month {
   @include calendarGrid();
 
-  @each $firstDayOfWeek, $daysOfWeek in $first-day-of-week-to-days-of-week {
-    @each $dayOfWeek in $daysOfWeek {
-      :host-context(.calendar--first-day-of-week-#{$firstDayOfWeek}) &--first-day-#{$dayOfWeek} {
+  @each $first-day-of-week, $days-of-week in $first-day-of-week-to-days-of-week {
+    @each $day-of-week in $days-of-week {
+      :host-context(.calendar--first-day-of-week-#{$first-day-of-week}) &--first-day-#{$day-of-week} {
         time:first-child {
           // flex item fallback
-          margin-left: (index($daysOfWeek, $dayOfWeek) - 1) * $calendar-cell-size--accessible;
+          margin-left: (index($days-of-week, $day-of-week) - 1) * $calendar-cell-size--accessible;
           // grid item
-          grid-column: index($daysOfWeek, $dayOfWeek);
+          grid-column: index($days-of-week, $day-of-week);
           @supports (display: grid) {
             margin-left: 0;
           }
         }
       }
-    }
-  }
-
-  &-header {
-    @include calendarGrid();
-    text-transform: uppercase;
-    background-color: snow;
-    font-weight: bold;
-
-    &__caption {
-      @include calendarGridCell();
-      // flex item fallback
-      flex-grow: 1;
-      // grid item
-      grid-column: 2 / span 5;
-    }
-
-    &__stepper {
-      @include calendarGridCell();
-      padding: 0;
-      margin: 0;
-      border: 0;
-      background: none;
     }
   }
 

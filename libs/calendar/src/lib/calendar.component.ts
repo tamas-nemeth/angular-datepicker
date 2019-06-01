@@ -5,7 +5,9 @@ import {
   Component,
   EventEmitter,
   forwardRef,
+  Inject,
   Input,
+  LOCALE_ID,
   OnChanges,
   Output,
   SimpleChanges,
@@ -14,6 +16,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 
 import { addMonths, isDate, startOfDay, startOfMonth } from 'date-utils';
+
+import { MonthStep } from './calendar-month-header/month-step.model';
 
 @Component({
   selector: 'lib-calendar',
@@ -41,8 +45,18 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   @Input() firstDayOfWeek: 'SUNDAY' | 'MONDAY' = 'SUNDAY';
   @Input() min?: Date;
   @Input() monthCaptionPattern?: string;
+
   // locale input is for demo purposes only - until the Ivy renderer arrives, there is no API for switching the locale at runtime
-  @Input() locale?: string;
+  private _locale?: string;
+
+  @Input()
+  get locale() {
+    return this._locale || this.localeId;
+  }
+
+  set locale(locale: string) {
+    this._locale = locale;
+  }
 
   private _firstMonth?: Date;
 
@@ -70,7 +84,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
 
   @Output() change = new EventEmitter<Date>();
 
-  constructor(public changeDetectorRef: ChangeDetectorRef) {}
+  constructor(public changeDetectorRef: ChangeDetectorRef, @Inject(LOCALE_ID) private localeId: string) {}
 
   ngAfterContentInit() {
     // first lifecycle hook after attached FormControl calls writeValue() with the value passed to its constructor
@@ -87,7 +101,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     return month.getTime();
   }
 
-  onMonthStep(step: -1 | 1) {
+  onMonthStep(step: MonthStep) {
     this.monthStepperPosition = addMonths(this.monthStepperPosition || new Date(), step);
     this.months = this.getMonths();
   }

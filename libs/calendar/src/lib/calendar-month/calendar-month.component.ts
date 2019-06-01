@@ -9,8 +9,9 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
+import { WeekDay } from '@angular/common';
 
-import { areDatesInSameMonth, DayOfWeek, getDaysOfMonth, isDateAfter, isSameDate, NumericDayOfWeek, startOfDay } from 'date-utils';
+import { areDatesInSameMonth, getDaysOfMonth, isDateAfter, isSameDate, startOfDay } from 'date-utils';
 
 @Component({
   selector: 'lib-calendar-month',
@@ -22,42 +23,26 @@ export class CalendarMonthComponent implements AfterViewInit, OnChanges {
   daysOfMonth!: Date[];
   firstDayOfMonth!: string;
 
-  private readonly defaultMonthCaptionPattern = 'MMMM y';
   private readonly dateSelector = '.calendar-month__date';
 
   @Input() selectedDate?: Date;
   @Input() min?: Date;
-  @Input() showMonthStepper = true;
-  @Input() locale?: string;
 
   private _month!: Date;
 
   @Input()
+  get month() {
+    return this._month;
+  }
   set month(month: Date) {
     if (!this._month || !areDatesInSameMonth(this._month, month)) {
       this._month = month;
       this.daysOfMonth = getDaysOfMonth(this._month);
-      this.firstDayOfMonth = DayOfWeek[this.daysOfMonth[0].getDay() as NumericDayOfWeek].toLowerCase();
+      this.firstDayOfMonth = WeekDay[this.daysOfMonth[0].getDay()].toLowerCase();
     }
   }
 
-  get month() {
-    return this._month;
-  }
-
-  private _monthCaptionPattern?: string;
-
-  @Input()
-  set monthCaptionPattern(monthCaptionPattern: string | undefined) {
-    this._monthCaptionPattern = monthCaptionPattern;
-  }
-
-  get monthCaptionPattern() {
-    return this._monthCaptionPattern || this.defaultMonthCaptionPattern;
-  }
-
   @Output() select = new EventEmitter<Date>();
-  @Output() monthStep = new EventEmitter<-1 | 1>();
 
   constructor(public changeDetectorRef: ChangeDetectorRef) {}
 
@@ -77,10 +62,6 @@ export class CalendarMonthComponent implements AfterViewInit, OnChanges {
 
   isDisabled(dayOfMonth: Date) {
     return !!this.min && isDateAfter(this.min, dayOfMonth);
-  }
-
-  stepMonth(step: -1 | 1) {
-    this.monthStep.emit(step);
   }
 
   onMonthClick(event: MouseEvent) {

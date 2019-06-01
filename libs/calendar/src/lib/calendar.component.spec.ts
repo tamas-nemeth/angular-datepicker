@@ -10,6 +10,8 @@ import { addMonths, Month, startOfMonth } from 'date-utils';
 import { CalendarComponent } from './calendar.component';
 import { CalendarWeekComponent } from './calendar-week/calendar-week.component';
 import { CalendarMonthComponent } from './calendar-month/calendar-month.component';
+import { MonthStep } from './calendar-month-header/month-step.model';
+import { CalendarMonthHeaderComponent } from './calendar-month-header/calendar-month-header.component';
 
 const defaultDate = new Date(2019, Month.February, 10);
 
@@ -38,6 +40,9 @@ describe('CalendarComponent', () => {
   const piDay = new Date(2019, Month.March, 14);
   let mockDate: Date;
   let monthOfMockDate: Date;
+  let component: CalendarComponent;
+  let wrapperComponent: CalendarWrapperComponent;
+  let fixture: ComponentFixture<CalendarComponent> | ComponentFixture<CalendarWrapperComponent>;
 
   beforeAll(() => {
     mockDate = valentinesDay;
@@ -54,6 +59,7 @@ describe('CalendarComponent', () => {
         CalendarWrapperComponent,
         CalendarComponent,
         MockComponent(CalendarWeekComponent),
+        MockComponent(CalendarMonthHeaderComponent),
         MockComponent(CalendarMonthComponent)
       ]
     })
@@ -61,9 +67,6 @@ describe('CalendarComponent', () => {
   }));
 
   describe('', () => {
-    let component: CalendarComponent;
-    let fixture: ComponentFixture<CalendarComponent>;
-
     beforeEach(() => {
       fixture = TestBed.createComponent(CalendarComponent);
       component = fixture.componentInstance;
@@ -355,36 +358,9 @@ describe('CalendarComponent', () => {
         expect(component.showMonthStepper).toBe(false);
       });
     });
-
-    function getMonths() {
-      return getMonthComponentDebugElements().map(monthDebugElement => monthDebugElement.componentInstance.month);
-    }
-
-    function stepMonth(step: -1 | 1) {
-      getMonthComponentDebugElement().triggerEventHandler('monthStep', step);
-    }
-
-    function selectDate(date: Date) {
-      getMonthComponentDebugElement().triggerEventHandler('select', date);
-    }
-
-    function getCalendarDebugElement() {
-      return fixture.debugElement.query(By.css('.calendar'));
-    }
-
-    function getMonthComponentDebugElement() {
-      return getMonthComponentDebugElements()[0];
-    }
-
-    function getMonthComponentDebugElements() {
-      return fixture.debugElement.queryAll(By.css('lib-calendar-month'));
-    }
   });
 
   describe('form control', () => {
-    let wrapperComponent: CalendarWrapperComponent;
-    let fixture: ComponentFixture<CalendarWrapperComponent>;
-
     beforeEach(() => {
       fixture = TestBed.createComponent(CalendarWrapperComponent);
       wrapperComponent = fixture.componentInstance;
@@ -468,7 +444,7 @@ describe('CalendarComponent', () => {
       expect(wrapperComponent.calendarComponent.change.emit).not.toHaveBeenCalled();
     });
 
-    it('should jump to the month of the selected date when switching back to one-month view', () => {
+    it('should jump to the month of the selected date in one-month view (default)', () => {
       wrapperComponent.dateControl.setValue(piDay);
       fixture.detectChanges();
 
@@ -484,29 +460,41 @@ describe('CalendarComponent', () => {
 
       expect(getMonths()).toEqual([new Date(2019, Month.May)]);
     });
-
-    function getMonths() {
-      return getMonthComponentDebugElements().map(monthDebugElement => monthDebugElement.componentInstance.month);
-    }
-
-    function selectDate(date: Date) {
-      getMonthComponentDebugElement().triggerEventHandler('select', date);
-    }
-
-    function stepMonth(step: -1 | 1) {
-      getMonthComponentDebugElement().triggerEventHandler('monthStep', step);
-    }
-
-    function getMonthComponentDebugElement() {
-      return getMonthComponentDebugElements()[0];
-    }
-
-    function getMonthComponentDebugElements() {
-      return fixture.debugElement.queryAll(By.css('lib-calendar-month'));
-    }
   });
 
   afterAll(() => {
     jasmine.clock().uninstall();
   });
+
+  function getMonths() {
+    return getMonthComponentDebugElements().map(monthDebugElement => monthDebugElement.componentInstance.month);
+  }
+
+  function selectDate(date: Date) {
+    getMonthComponentDebugElement().triggerEventHandler('select', date);
+  }
+
+  function getCalendarDebugElement() {
+    return fixture.debugElement.query(By.css('.calendar'));
+  }
+
+  function getMonthComponentDebugElement() {
+    return getMonthComponentDebugElements()[0];
+  }
+
+  function getMonthComponentDebugElements() {
+    return fixture.debugElement.queryAll(By.css('lib-calendar-month'));
+  }
+
+  function stepMonth(step: MonthStep) {
+    getMonthHeaderComponentDebugElement().triggerEventHandler('monthStep', step);
+  }
+
+  function getMonthHeaderComponentDebugElement() {
+    return getMonthHeaderComponentDebugElements()[0];
+  }
+
+  function getMonthHeaderComponentDebugElements() {
+    return fixture.debugElement.queryAll(By.css('lib-calendar-month-header'));
+  }
 });

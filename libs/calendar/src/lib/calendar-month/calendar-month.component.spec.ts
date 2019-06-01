@@ -5,8 +5,6 @@ import { Month } from 'date-utils';
 
 import { CalendarMonthComponent } from './calendar-month.component';
 
-type MonthStep = 'previous' | 'next';
-
 describe('CalendarMonthComponent', () => {
   const valentinesDay = new Date(2019, Month.February, 14);
   let component: CalendarMonthComponent;
@@ -25,15 +23,8 @@ describe('CalendarMonthComponent', () => {
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should display the year and the name of the month received via input', () => {
-    component.month = new Date(2019, Month.February);
-
     fixture.detectChanges();
-
-    expect(getCaption()).toEqual('February 2019');
+    expect(component).toBeTruthy();
   });
 
   it('should display the days of the month received via input', () => {
@@ -56,52 +47,6 @@ describe('CalendarMonthComponent', () => {
     // toBe() is used intentionally for checking reference equality
     expect(component.month).toBe(february);
     expect(component.daysOfMonth).toBe(daysOfMonth);
-  });
-
-  describe('month steppers', () => {
-    it('should be visible if showMonthStepper is true', () => {
-      component.showMonthStepper = true;
-
-      fixture.detectChanges();
-
-      expect(getMonthStepperButtons()).toBeTruthy();
-    });
-
-    it('should be hidden if showMonthStepper is false', () => {
-      component.showMonthStepper = false;
-
-      fixture.detectChanges();
-
-      expect(getMonthStepperButtons()).toBeFalsy();
-    });
-
-    it('should emit monthStep on next month click', () => {
-      component.showMonthStepper = true;
-      spyOn(component.monthStep, 'emit');
-      fixture.detectChanges();
-
-      stepMonth('next');
-
-      expect(component.monthStep.emit).toHaveBeenCalledWith(1);
-    });
-
-    it('should emit monthStep on previous month click', () => {
-      component.showMonthStepper = true;
-      spyOn(component.monthStep, 'emit');
-      fixture.detectChanges();
-
-      stepMonth('previous');
-
-      expect(component.monthStep.emit).toHaveBeenCalledWith(-1);
-    });
-  });
-
-  describe('monthCaptionPattern', () => {
-    it('should have a default when overwritten by undefined', () => {
-      component.monthCaptionPattern = undefined;
-
-      expect(component.monthCaptionPattern as string | undefined).toEqual('MMMM y');
-    });
   });
 
   describe('afterViewInit', () => {
@@ -293,21 +238,5 @@ describe('CalendarMonthComponent', () => {
 
   function getMonthDebugElement() {
     return fixture.debugElement.query(By.css('.calendar-month'));
-  }
-
-  function getCaption() {
-    return fixture.debugElement.query(By.css('.calendar-month-header__caption')).nativeElement.textContent;
-  }
-
-  function stepMonth(monthStep: MonthStep) {
-    return getMonthStepperButton(monthStep).triggerEventHandler('click', null);
-  }
-
-  function getMonthStepperButton(monthStep: MonthStep) {
-    return fixture.debugElement.query(By.css(`.calendar-month-header__stepper--${monthStep}`));
-  }
-
-  function getMonthStepperButtons() {
-    return fixture.debugElement.query(By.css('.calendar-month-header__stepper'));
   }
 });

@@ -69,7 +69,7 @@
                 [locale]="localeControl.value"
                 [min]="minDate$ | async"
                 [firstMonth]="firstMonth$ | async"
-                [monthCaptionPattern]="monthCaptionPatternControl.value || localeToMonthCaptionPattern[localeControl.value]"
+                [monthCaptionPattern]="monthCaptionPatternControl.value"
                 [numberOfMonths]="numberOfMonthsControl.value"
                 [formControl]="dateControl"
                 id="calendar"

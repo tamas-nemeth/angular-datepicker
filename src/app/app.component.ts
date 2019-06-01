@@ -14,11 +14,6 @@ import { startOfDay, toISODateString } from 'date-utils';
 export class AppComponent {
   private readonly today = startOfDay(new Date());
 
-  localeToMonthCaptionPattern: {[locale: string]: string | undefined} = {
-    en: 'MMMM y',
-    hu: 'y. MMMM',
-  };
-
   firstDayOfWeekControl = new FormControl('MONDAY');
   localeControl = new FormControl('');
   minControl = new FormControl(toISODateString(new Date()));

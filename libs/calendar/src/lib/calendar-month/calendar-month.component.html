@@ -1,18 +1,3 @@
-<div class="calendar-month-header">
-  <button class="calendar-month-header__stepper calendar-month-header__stepper--previous"
-          *ngIf="showMonthStepper"
-          (click)="stepMonth(-1)"
-          type="button"
-          aria-label="Previous month"
-  >◀</button>
-  <span class="calendar-month-header__caption" role="heading">{{month | date:monthCaptionPattern:undefined:locale}}</span>
-  <button class="calendar-month-header__stepper calendar-month-header__stepper--next"
-          *ngIf="showMonthStepper"
-          (click)="stepMonth(1)"
-          type="button"
-          aria-label="Next month"
-  >▶</button>
-</div>
 <div class="calendar-month"
      [ngClass]="[
        'calendar-month--first-day-' + firstDayOfMonth

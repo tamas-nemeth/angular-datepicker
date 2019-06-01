@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-
-import { NumericDayOfWeek, setDay, startOfDay } from 'date-utils';
+import { ChangeDetectionStrategy, Component, Inject, Input, LOCALE_ID, OnInit } from '@angular/core';
+import { FormStyle, getLocaleDayNames, TranslationWidth } from '@angular/common';
 
 @Component({
   selector: 'lib-calendar-week',
@@ -8,8 +7,34 @@ import { NumericDayOfWeek, setDay, startOfDay } from 'date-utils';
   styleUrls: ['./calendar-week.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CalendarWeekComponent {
-  private readonly today = startOfDay(new Date());
-  daysOfWeek = Array.from({length: 7}, (_, index) => setDay(this.today, index as NumericDayOfWeek));
-  @Input() locale?: string;
+export class CalendarWeekComponent implements OnInit {
+  daysOfWeek!: string[];
+  narrowDaysOfWeek!: string[];
+
+  private _locale?: string;
+
+  @Input()
+  get locale() {
+    return this._locale || this.localeId;
+  }
+  set locale(locale: string) {
+    this._locale = locale;
+    this.daysOfWeek = this.getDaysOfWeek();
+    this.narrowDaysOfWeek = this.getNarrowDaysOfWeek();
+  }
+
+  constructor(@Inject(LOCALE_ID) private localeId: string) {}
+
+  ngOnInit(): void {
+    this.daysOfWeek = this.getDaysOfWeek();
+    this.narrowDaysOfWeek = this.getNarrowDaysOfWeek();
+  }
+
+  private getDaysOfWeek() {
+    return getLocaleDayNames(this.locale, FormStyle.Format, TranslationWidth.Wide);
+  }
+
+  private getNarrowDaysOfWeek() {
+    return getLocaleDayNames(this.locale!, FormStyle.Format, TranslationWidth.Narrow);
+  }
 }

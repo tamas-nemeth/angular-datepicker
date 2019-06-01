@@ -1,7 +1,7 @@
 <div class="calendar-week">
   <abbr class="calendar-week__day"
-        *ngFor="let dayOfWeek of daysOfWeek"
-        [title]="dayOfWeek | date:'EEEE':undefined:locale"
-        [attr.aria-label]="dayOfWeek | date:'EEEE':undefined:locale"
-  >{{dayOfWeek | date:'EEEEE':undefined:locale}}</abbr>
+        *ngFor="let dayOfWeek of daysOfWeek; index as index"
+        [title]="dayOfWeek"
+        [attr.aria-label]="dayOfWeek"
+  >{{narrowDaysOfWeek[index]}}</abbr>
 </div>
