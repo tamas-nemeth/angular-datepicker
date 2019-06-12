@@ -18,17 +18,20 @@
     <legend>CalendarComponent's inputs (update the calendar below)</legend>
 
     <div class="form-control">
-      <label class="form-control__label">First day of week</label>
-      <input type="radio" formControlName="firstDayOfWeek" value="SUNDAY" id="sunday"><label for="sunday" class="form-control__label">Sunday</label>
-      <input type="radio" formControlName="firstDayOfWeek" value="MONDAY" id="monday"><label for="monday" class="form-control__label">Monday</label>
+      <label for="locale" class="form-control__label">Locale</label>
+      <select id="locale" formControlName="locale">
+        <option value="">Default (American English)</option>
+        <option value="en-GB">British English</option>
+        <option value="hu">Hungarian</option>
+      </select>
     </div>
 
     <div class="form-control">
-      <label for="locale" class="form-control__label">Locale</label>
-      <select id="locale" formControlName="locale">
-        <option value="">Default</option>
-        <option value="en">English</option>
-        <option value="hu">Hungarian</option>
+      <label for="first-day-of-week" class="form-control__label">First day of week</label>
+      <select id="first-day-of-week" formControlName="firstDayOfWeek">
+        <option value="">Default (based on locale)</option>
+        <option>Sunday</option>
+        <option>Monday</option>
       </select>
     </div>
 
@@ -59,9 +62,9 @@
 
     <button (click)="selectToday()" class="form-control" type="button">Select today</button>
 
-    <div class="form-control">
-      <label for="selected-date" class="form-control__label">Selected date</label>:
-      <output id="selected-date" for="calendar">{{dateControl.value | date}}</output>
+    <div class="form-control" tabindex="0">
+      <label class="form-control__label">Selected date</label>:
+      <output for="calendar">{{dateControl.value | date}}</output>
     </div>
   </fieldset>
 

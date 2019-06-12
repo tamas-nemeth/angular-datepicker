@@ -15,10 +15,11 @@ export class CalendarWeekComponent implements OnInit {
 
   @Input()
   get locale() {
-    return this._locale || this.localeId;
+    return this._locale;
   }
-  set locale(locale: string) {
-    this._locale = locale;
+
+  set locale(locale: string | undefined) {
+    this._locale = locale || this.localeId;
     this.daysOfWeek = this.getDaysOfWeek();
     this.narrowDaysOfWeek = this.getNarrowDaysOfWeek();
   }
@@ -26,12 +27,13 @@ export class CalendarWeekComponent implements OnInit {
   constructor(@Inject(LOCALE_ID) private localeId: string) {}
 
   ngOnInit(): void {
-    this.daysOfWeek = this.getDaysOfWeek();
-    this.narrowDaysOfWeek = this.getNarrowDaysOfWeek();
+    if (!this.locale) {
+      this.locale = this.localeId;
+    }
   }
 
   private getDaysOfWeek() {
-    return getLocaleDayNames(this.locale, FormStyle.Format, TranslationWidth.Wide);
+    return getLocaleDayNames(this.locale!, FormStyle.Format, TranslationWidth.Wide);
   }
 
   private getNarrowDaysOfWeek() {

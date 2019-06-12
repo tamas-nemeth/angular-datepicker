@@ -14,7 +14,7 @@ import { startOfDay, toISODateString } from 'date-utils';
 export class AppComponent {
   private readonly today = startOfDay(new Date());
 
-  firstDayOfWeekControl = new FormControl('MONDAY');
+  firstDayOfWeekControl = new FormControl('');
   localeControl = new FormControl('');
   minControl = new FormControl(toISODateString(new Date()));
   dateControl = new FormControl();

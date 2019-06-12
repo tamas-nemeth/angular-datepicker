@@ -9,9 +9,11 @@ import {
   Input,
   LOCALE_ID,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { getLocaleFirstDayOfWeek, WeekDay } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 
@@ -31,7 +33,7 @@ import { MonthStep } from './calendar-month-header/month-step.model';
     }
   ]
 })
-export class CalendarComponent implements AfterContentInit, ControlValueAccessor, OnChanges {
+export class CalendarComponent implements AfterContentInit, ControlValueAccessor, OnChanges, OnInit {
   months!: Date[];
   value?: Date;
   touched = false;
@@ -42,20 +44,30 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   private onTouched?: () => void;
   private monthStepperPosition?: Date;
 
-  @Input() firstDayOfWeek: 'SUNDAY' | 'MONDAY' = 'SUNDAY';
   @Input() min?: Date;
   @Input() monthCaptionPattern?: string;
 
-  // locale input is for demo purposes only - until the Ivy renderer arrives, there is no API for switching the locale at runtime
+  // locale input is for demo purposes only - until there is an API for switching the locale at runtime
   private _locale?: string;
 
   @Input()
   get locale() {
-    return this._locale || this.localeId;
+    return this._locale;
   }
 
-  set locale(locale: string) {
-    this._locale = locale;
+  set locale(locale: string | undefined) {
+    this._locale = locale || this.localeId;
+  }
+
+  private _firstDayOfWeek?: keyof typeof WeekDay;
+
+  @Input()
+  get firstDayOfWeek() {
+    return this._firstDayOfWeek || this.getDefaultFirstDayOfWeek();
+  }
+
+  set firstDayOfWeek(firstDayOfWeek: keyof typeof WeekDay) {
+    this._firstDayOfWeek = firstDayOfWeek;
   }
 
   private _firstMonth?: Date;
@@ -85,6 +97,12 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   @Output() change = new EventEmitter<Date>();
 
   constructor(public changeDetectorRef: ChangeDetectorRef, @Inject(LOCALE_ID) private localeId: string) {}
+
+  ngOnInit() {
+    if (!this.locale) {
+      this.locale = this.localeId;
+    }
+  }
 
   ngAfterContentInit() {
     // first lifecycle hook after attached FormControl calls writeValue() with the value passed to its constructor
@@ -151,5 +169,9 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     const firstMonth = (this.showMonthStepper ? this.monthStepperPosition : this.firstMonth) || new Date();
     const startOfFirstMonth = startOfMonth(firstMonth);
     return Array.from({length: this.numberOfMonths}, (_, index) => addMonths(startOfFirstMonth, index));
+  }
+
+  private getDefaultFirstDayOfWeek() {
+    return WeekDay[getLocaleFirstDayOfWeek(this.locale!)] as keyof typeof WeekDay;
   }
 }

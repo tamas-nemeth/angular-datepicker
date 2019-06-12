@@ -1,4 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { registerLocaleData } from '@angular/common';
+import HungarianLocale from '@angular/common/locales/hu';
+import BritishLocale from '@angular/common/locales/en-GB';
 import { By } from '@angular/platform-browser';
 
 import { Month } from 'date-utils';
@@ -8,24 +11,44 @@ import { CalendarMonthHeaderComponent } from './calendar-month-header.component'
 type MonthStep = 'previous' | 'next';
 
 describe('CalendarMonthHeaderComponent', () => {
+  const localeMonthCaptionPatterns = {
+    'en-US': 'MMMM, y',
+    'en-GB': 'MMMM y',
+    hu: 'y. MMMM',
+  };
   let component: CalendarMonthHeaderComponent;
   let fixture: ComponentFixture<CalendarMonthHeaderComponent>;
+  let mockDate: Date;
+
+  beforeAll(() => {
+    registerLocaleData(HungarianLocale);
+    registerLocaleData(BritishLocale);
+
+    mockDate = new Date(2019, Month.June);
+    jasmine.clock().mockDate(mockDate);
+  });
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CalendarMonthHeaderComponent ]
+      declarations: [CalendarMonthHeaderComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CalendarMonthHeaderComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
+    fixture.detectChanges();
     expect(component).toBeTruthy();
+  });
+
+  it('should display the name of the current year and month by default', () => {
+    fixture.detectChanges();
+
+    expect(getCaption()).toEqual('June, 2019');
   });
 
   it('should display the year and the name of the month received via input', () => {
@@ -76,23 +99,64 @@ describe('CalendarMonthHeaderComponent', () => {
 
   describe('localisation', () => {
     describe('locale', () => {
-      it('should default to LOCALE_ID before init', () => {
+      it('should default to LOCALE_ID after init', () => {
         fixture.detectChanges();
         expect(component.locale).toBe('en-US');
       });
 
-      it('should default to LOCALE_ID after init', () => {
+      it('should default to LOCALE_ID when set back to default', () => {
+        component.locale = 'en-GB';
+        fixture.detectChanges();
+
+        component.locale = undefined as string | undefined;
+
         expect(component.locale).toBe('en-US');
       });
 
-      describe('monthCaptionPattern', () => {
-        it('should default to long date format without days', () => {
-          fixture.detectChanges();
+      it('should be settable before init', () => {
+        component.locale = 'en-GB';
+        fixture.detectChanges();
 
-          expect(component.monthCaptionPattern).toEqual('MMMM, y');
-        });
+        expect(component.locale).toBe('en-GB');
+      });
+
+      it('should be settable after init', () => {
+        fixture.detectChanges();
+        component.locale = 'en-GB';
+
+        expect(component.locale).toBe('en-GB');
+      });
+
+      it('should be re-settable after init', () => {
+        component.locale = 'en-GB';
+        fixture.detectChanges();
+
+        component.locale = 'hu';
+
+        expect(component.locale).toBe('hu');
       });
     });
+
+    describe('monthCaptionPattern', () => {
+      it('should default to long date format without days if not specified', () => {
+        fixture.detectChanges();
+
+        expect(component.monthCaptionPattern).toEqual(localeMonthCaptionPatterns['en-US']);
+      });
+
+      it('should default to long date format without days when set to undefined', () => {
+        component.monthCaptionPattern = 'MMM y';
+        fixture.detectChanges();
+
+        component.monthCaptionPattern = undefined as string | undefined;
+
+        expect(component.monthCaptionPattern).toEqual(localeMonthCaptionPatterns['en-US']);
+      });
+    });
+  });
+
+  afterAll(() => {
+    jasmine.clock().uninstall();
   });
 
   function getCaption() {

@@ -1,7 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
-import localeHu from '@angular/common/locales/hu';
+import HungarianLocale from '@angular/common/locales/hu';
+import BritishLocale from '@angular/common/locales/en-GB';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { CalendarModule } from 'calendar';
@@ -9,7 +10,8 @@ import { ModalModule } from 'modal';
 
 import { AppComponent } from './app.component';
 
-registerLocaleData(localeHu);
+registerLocaleData(HungarianLocale);
+registerLocaleData(BritishLocale);
 
 @NgModule({
   declarations: [

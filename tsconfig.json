@@ -25,9 +25,14 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "paths": {
-      "*": [
-        "libs/*",
-        "libs/*/src/public-api"
+      "date-utils": [
+        "libs/date-utils/index.ts"
+      ],
+      "calendar": [
+        "libs/calendar/src/public-api.ts"
+      ],
+      "modal": [
+        "libs/modal/src/public-api.ts"
       ]
     }
   }

@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
-import localeHu from '@angular/common/locales/hu';
+import HungarianLocale from '@angular/common/locales/hu';
 import { By } from '@angular/platform-browser';
 
 import { CalendarWeekComponent } from './calendar-week.component';
@@ -46,8 +46,8 @@ describe('CalendarWeekComponent', () => {
       expect(getDayOfWeekAriaLabels()).toEqual(daysOfWeek);
     });
 
-    it('should display the 7 days of the week in Hungarian if locale is set to hu', () => {
-      registerLocaleData(localeHu);
+    it('should display the 7 days of the week n Hungarian if locale is set to hu', () => {
+      registerLocaleData(HungarianLocale);
       const daysOfWeek = ['V', 'H', 'K', 'Sz', 'Cs', 'P', 'Sz'];
       component.locale = 'hu';
 
@@ -71,7 +71,7 @@ describe('CalendarWeekComponent', () => {
     }));
 
     beforeEach(() => {
-      registerLocaleData(localeHu);
+      registerLocaleData(HungarianLocale);
       localeId = 'hu';
 
       fixture = TestBed.createComponent(CalendarWeekComponent);
@@ -86,12 +86,17 @@ describe('CalendarWeekComponent', () => {
     });
 
     describe('locale', () => {
-      it('should default to LOCALE_ID before init', () => {
+      it('should default to LOCALE_ID after init', () => {
         fixture.detectChanges();
         expect(component.locale).toBe('hu');
       });
 
-      it('should default to LOCALE_ID after init', () => {
+      it('should default to LOCALE_ID when set back to default', () => {
+        component.locale = 'en-GB';
+        fixture.detectChanges();
+
+        component.locale = undefined as string | undefined;
+
         expect(component.locale).toBe('hu');
       });
     });

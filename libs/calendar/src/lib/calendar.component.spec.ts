@@ -77,7 +77,7 @@ describe('CalendarComponent', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should set value on monthcomponent select event', () => {
+    it('should set value on MonthComponent select event', () => {
       fixture.detectChanges();
 
       selectDate(valentinesDay);
@@ -87,7 +87,7 @@ describe('CalendarComponent', () => {
       expect(component.value).toBe(valentinesDay);
     });
 
-    it('should emit a change on monthcomponent select event', () => {
+    it('should emit a change on MonthComponent select event', () => {
       fixture.detectChanges();
       spyOn(component.change, 'emit');
 
@@ -97,7 +97,7 @@ describe('CalendarComponent', () => {
       expect(component.change.emit).toHaveBeenCalledWith(valentinesDay);
     });
 
-    it('should bind value input of monthcomponent to value', () => {
+    it('should bind value input of MonthComponent to value', () => {
       fixture.detectChanges();
 
       selectDate(valentinesDay);
@@ -107,12 +107,18 @@ describe('CalendarComponent', () => {
       expect(getMonthComponentDebugElement().componentInstance.selectedDate).toBe(component.value);
     });
 
-    it('should have a class with the first day of week', () => {
-      component.firstDayOfWeek = 'SUNDAY';
-
+    it('should have a class with the first day of week as sunday by default', () => {
       fixture.detectChanges();
 
       expect(getCalendarDebugElement().classes['calendar--first-day-of-week-sunday']).toBe(true);
+    });
+
+    it('should have a class with the first day of week', () => {
+      component.firstDayOfWeek = 'Monday';
+
+      fixture.detectChanges();
+
+      expect(getCalendarDebugElement().classes['calendar--first-day-of-week-monday']).toBe(true);
     });
 
     it('should add --disabled class when control is disabled', () => {
