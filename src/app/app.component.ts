@@ -21,7 +21,7 @@ export class AppComponent {
   datepickerControl = new FormControl();
   disabledControl = new FormControl(false);
   numberOfMonthsControl = new FormControl(1);
-  monthCaptionPatternControl = new FormControl();
+  monthAndYearFormatControl = new FormControl();
   firstMonthControl = new FormControl();
 
   demoFormGroup = new FormGroup({
@@ -31,7 +31,7 @@ export class AppComponent {
     date: this.dateControl,
     disabled: this.disabledControl,
     numberOfMonths: this.numberOfMonthsControl,
-    monthCaptionPattern: this.monthCaptionPatternControl,
+    monthAndYearFormat: this.monthAndYearFormatControl,
     firstMonth: this.firstMonthControl,
   });
 

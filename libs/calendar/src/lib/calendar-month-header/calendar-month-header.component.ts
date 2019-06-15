@@ -10,8 +10,12 @@ import { MonthStep } from './month-step.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarMonthHeaderComponent implements OnInit {
-  private readonly localeDateFormatDayPart = /\s?d+\.?/;
-  private defaultMonthCaptionPattern!: string;
+  private readonly localeDateFormatDayPart = /\s?d+(\.|,)?/;
+  private readonly dateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long'
+  };
+  private defaultMonthAndYearFormat!: string;
 
   @Input() showMonthStepper = true;
   @Input() month = new Date();
@@ -25,18 +29,18 @@ export class CalendarMonthHeaderComponent implements OnInit {
 
   set locale(locale: string | undefined) {
     this._locale = locale || this.localeId;
-    this.defaultMonthCaptionPattern = this.getDefaultMonthCaptionPattern();
+    this.defaultMonthAndYearFormat = this.getDefaultMonthAndYearFormat();
   }
 
-  private _monthCaptionPattern?: string;
+  private _monthAndYearFormat?: string;
 
   @Input()
-  set monthCaptionPattern(monthCaptionPattern: string | undefined) {
-    this._monthCaptionPattern = monthCaptionPattern;
+  set monthAndYearFormat(monthAndYearFormat: string | undefined) {
+    this._monthAndYearFormat = monthAndYearFormat;
   }
 
-  get monthCaptionPattern() {
-    return this._monthCaptionPattern || this.defaultMonthCaptionPattern;
+  get monthAndYearFormat() {
+    return this._monthAndYearFormat || this.defaultMonthAndYearFormat;
   }
 
   @Output() monthStep = new EventEmitter<MonthStep>();
@@ -53,7 +57,19 @@ export class CalendarMonthHeaderComponent implements OnInit {
     this.monthStep.emit(step);
   }
 
-  private getDefaultMonthCaptionPattern() {
-    return getLocaleDateFormat(this.locale!, FormatWidth.Long).replace(this.localeDateFormatDayPart, '');
+  private getDefaultMonthAndYearFormat() {
+    if (Intl.DateTimeFormat.prototype.formatToParts) {
+      const dateFormatter = new Intl.DateTimeFormat(this.locale, this.dateTimeFormatOptions);
+      return dateFormatter.formatToParts().map(({type, value}) => {
+        switch(type) {
+          case 'year': return 'y';
+		  case 'month': return 'MMMM';
+		  case 'literal': return `'${value}'`;
+		  default: return '';
+		}
+	  }).reduce((dateFormat, dateFormatPart) => dateFormat + dateFormatPart);
+	} else {
+      return getLocaleDateFormat(this.locale!, FormatWidth.Long).replace(this.localeDateFormatDayPart, '').trim();
+	}
   }
 }

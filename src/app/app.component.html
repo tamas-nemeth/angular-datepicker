@@ -23,6 +23,7 @@
         <option value="">Default (American English)</option>
         <option value="en-GB">British English</option>
         <option value="hu">Hungarian</option>
+        <option value="es">Spanish</option>
       </select>
     </div>
 
@@ -51,8 +52,8 @@
     </div>
 
     <div class="form-control">
-      <label for="month-caption-pattern" class="form-control__label">Month caption pattern</label>
-      <input type="text" id="month-caption-pattern" formControlName="monthCaptionPattern" placeholder="y, MMMM">
+      <label for="month-and-year-format" class="form-control__label">Month and year format</label>
+      <input type="text" id="month-and-year-format" formControlName="monthAndYearFormat" placeholder="y, MMMM">
     </div>
 
     <div class="form-control">
@@ -72,7 +73,7 @@
                 [locale]="localeControl.value"
                 [min]="minDate$ | async"
                 [firstMonth]="firstMonth$ | async"
-                [monthCaptionPattern]="monthCaptionPatternControl.value"
+                [monthAndYearFormat]="monthAndYearFormatControl.value"
                 [numberOfMonths]="numberOfMonthsControl.value"
                 [formControl]="dateControl"
                 id="calendar"

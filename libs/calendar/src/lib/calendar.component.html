@@ -4,7 +4,7 @@
   <lib-calendar-week [locale]="locale"></lib-calendar-week>
   <ng-container *ngFor="let month of months; trackBy: trackByMilliseconds">
     <lib-calendar-month-header [month]="month"
-                               [monthCaptionPattern]="monthCaptionPattern"
+                               [monthAndYearFormat]="monthAndYearFormat"
                                [showMonthStepper]="showMonthStepper"
                                [locale]="locale"
                                (monthStep)="onMonthStep($event)"

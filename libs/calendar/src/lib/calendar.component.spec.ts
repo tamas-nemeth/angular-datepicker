@@ -19,7 +19,7 @@ const defaultDate = new Date(2019, Month.February, 10);
   template: `
     <lib-calendar [min]="min"
                   [locale]="locale"
-                  [monthCaptionPattern]="monthCaptionPattern"
+                  [monthAndYearFormat]="monthAndYearFormat"
                   [firstDayOfWeek]="firstDayOfWeek"
                   [formControl]="dateControl"
     ></lib-calendar>
@@ -29,7 +29,7 @@ const defaultDate = new Date(2019, Month.February, 10);
 class CalendarWrapperComponent {
   min?: Date;
   locale?: string;
-  monthCaptionPattern?: string;
+  monthAndYearFormat?: string;
   firstDayOfWeek?: 'MONDAY' | 'SUNDAY';
   @ViewChild(CalendarComponent, {static: false}) calendarComponent!: CalendarComponent;
   dateControl = new FormControl(defaultDate);

@@ -45,7 +45,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   private monthStepperPosition?: Date;
 
   @Input() min?: Date;
-  @Input() monthCaptionPattern?: string;
+  @Input() monthAndYearFormat?: string;
 
   // locale input is for demo purposes only - until there is an API for switching the locale at runtime
   private _locale?: string;

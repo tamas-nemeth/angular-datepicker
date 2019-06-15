@@ -2,7 +2,6 @@
 
 .calendar-month-header {
   @include calendarGrid();
-  text-transform: uppercase;
   background-color: snow;
   font-weight: bold;
 

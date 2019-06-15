@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { registerLocaleData } from '@angular/common';
+import { formatDate, registerLocaleData } from '@angular/common';
 import HungarianLocale from '@angular/common/locales/hu';
 import BritishLocale from '@angular/common/locales/en-GB';
 import { By } from '@angular/platform-browser';
@@ -12,7 +12,7 @@ type MonthStep = 'previous' | 'next';
 
 describe('CalendarMonthHeaderComponent', () => {
   const localeMonthCaptionPatterns = {
-    'en-US': 'MMMM, y',
+    'en-US': 'MMMM y',
     'en-GB': 'MMMM y',
     hu: 'y. MMMM',
   };
@@ -48,15 +48,16 @@ describe('CalendarMonthHeaderComponent', () => {
   it('should display the name of the current year and month by default', () => {
     fixture.detectChanges();
 
-    expect(getCaption()).toEqual('June, 2019');
+    expect(getCaption()).toEqual(formatMonth(mockDate, 'en-US'));
   });
 
   it('should display the year and the name of the month received via input', () => {
-    component.month = new Date(2019, Month.February);
+    const month = new Date(2019, Month.February);
+	component.month = month;
 
     fixture.detectChanges();
 
-    expect(getCaption()).toEqual('February, 2019');
+    expect(getCaption()).toEqual(formatMonth(month, 'en-US'));
   });
 
   describe('month steppers', () => {
@@ -133,31 +134,38 @@ describe('CalendarMonthHeaderComponent', () => {
 
         component.locale = 'hu';
 
+		triggerOnPushChangeDetection();
+		fixture.detectChanges();
         expect(component.locale).toBe('hu');
+		expect(getCaption()).toBe(formatMonth(mockDate, 'hu'));
       });
     });
 
-    describe('monthCaptionPattern', () => {
-      it('should default to long date format without days if not specified', () => {
+    describe('monthAndYearFormat', () => {
+	  it('should default to long date format without days when set to undefined', () => {
+        component.monthAndYearFormat = 'MMM y';
         fixture.detectChanges();
 
-        expect(component.monthCaptionPattern).toEqual(localeMonthCaptionPatterns['en-US']);
-      });
+        component.monthAndYearFormat = undefined as string | undefined;
 
-      it('should default to long date format without days when set to undefined', () => {
-        component.monthCaptionPattern = 'MMM y';
+        triggerOnPushChangeDetection();
         fixture.detectChanges();
-
-        component.monthCaptionPattern = undefined as string | undefined;
-
-        expect(component.monthCaptionPattern).toEqual(localeMonthCaptionPatterns['en-US']);
-      });
-    });
+        expect(getCaption()).toEqual(formatMonth(mockDate, 'en-US'));
+      }); 
+	});
   });
 
   afterAll(() => {
     jasmine.clock().uninstall();
   });
+
+  function triggerOnPushChangeDetection() {
+    stepMonth('next');
+  }
+
+  function formatMonth(date: Date, locale: keyof typeof localeMonthCaptionPatterns) {
+    return formatDate(date, localeMonthCaptionPatterns[locale], locale);
+  }
 
   function getCaption() {
     return fixture.debugElement.query(By.css('.calendar-month-header__caption')).nativeElement.textContent;
