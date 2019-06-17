@@ -10,7 +10,9 @@
       </span>
     </div>
     <lib-modal #datepickerModal>
-      <lib-calendar [formControl]="datepickerControl" id="datepicker-calendar" (change)="datepickerModal.toggleOverlay()"></lib-calendar>
+      <lib-calendar [formControl]="datepickerControl"
+                    id="datepicker-calendar"
+                    (change)="datepickerModal.toggleOverlay()"></lib-calendar>
     </lib-modal>
   </fieldset>
 

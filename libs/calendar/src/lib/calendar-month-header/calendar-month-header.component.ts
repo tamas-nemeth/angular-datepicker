@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, LOCALE_ID, OnInit, Output } from '@angular/core';
-import { FormatWidth, getLocaleDateFormat } from '@angular/common';
 
 import { MonthStep } from './month-step.model';
+import { getLocaleMonthAndYearFormat } from 'date-utils';
 
 @Component({
   selector: 'lib-calendar-month-header',
@@ -10,11 +10,6 @@ import { MonthStep } from './month-step.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarMonthHeaderComponent implements OnInit {
-  private readonly localeDateFormatDayPart = /\s?d+(\.|,)?/;
-  private readonly dateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long'
-  };
   private defaultMonthAndYearFormat!: string;
 
   @Input() showMonthStepper = true;
@@ -29,7 +24,7 @@ export class CalendarMonthHeaderComponent implements OnInit {
 
   set locale(locale: string | undefined) {
     this._locale = locale || this.localeId;
-    this.defaultMonthAndYearFormat = this.getDefaultMonthAndYearFormat();
+    this.defaultMonthAndYearFormat = getLocaleMonthAndYearFormat(this._locale);
   }
 
   private _monthAndYearFormat?: string;
@@ -55,21 +50,5 @@ export class CalendarMonthHeaderComponent implements OnInit {
 
   stepMonth(step: MonthStep) {
     this.monthStep.emit(step);
-  }
-
-  private getDefaultMonthAndYearFormat() {
-    if (Intl.DateTimeFormat.prototype.formatToParts) {
-      const dateFormatter = new Intl.DateTimeFormat(this.locale, this.dateTimeFormatOptions);
-      return dateFormatter.formatToParts().map(({type, value}) => {
-        switch(type) {
-          case 'year': return 'y';
-		  case 'month': return 'MMMM';
-		  case 'literal': return `'${value}'`;
-		  default: return '';
-		}
-	  }).reduce((dateFormat, dateFormatPart) => dateFormat + dateFormatPart);
-	} else {
-      return getLocaleDateFormat(this.locale!, FormatWidth.Long).replace(this.localeDateFormatDayPart, '').trim();
-	}
   }
 }

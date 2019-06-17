@@ -4951,10 +4951,10 @@ neo-async@^2.5.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
 
-ng-mocks@^7.8.0:
-  version "7.8.0"
-  resolved "https://registry.yarnpkg.com/ng-mocks/-/ng-mocks-7.8.0.tgz#05b9f46164ca8d22b72ee9ac2369f37b2434ceb2"
-  integrity sha512-QopwqQUeEoUmHZdJeEDG3koJ5woHYeVe3TEfRjVHwLyLfJ/wdcNcepdei6j9n9Ne42SpS2bOETgKBqUT5NUsng==
+ng-mocks@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/ng-mocks/-/ng-mocks-8.0.0.tgz#cc6e2e67b18166fe5282c0f255930037375bdffa"
+  integrity sha512-FsuB6DSsg48026LFZQy/KtY+uQ/aFzzyA5ys4yBjUMcN+6dUocIsKGaqZR/Cu5KL56rvusmGv8YqKVX1KHqtsg==
 
 ng-packagr@^5.2.0:
   version "5.2.0"

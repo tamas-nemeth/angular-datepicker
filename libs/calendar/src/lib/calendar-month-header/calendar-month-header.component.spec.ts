@@ -53,7 +53,7 @@ describe('CalendarMonthHeaderComponent', () => {
 
   it('should display the year and the name of the month received via input', () => {
     const month = new Date(2019, Month.February);
-	component.month = month;
+    component.month = month;
 
     fixture.detectChanges();
 
@@ -134,15 +134,15 @@ describe('CalendarMonthHeaderComponent', () => {
 
         component.locale = 'hu';
 
-		triggerOnPushChangeDetection();
-		fixture.detectChanges();
+        triggerOnPushChangeDetection();
+        fixture.detectChanges();
         expect(component.locale).toBe('hu');
-		expect(getCaption()).toBe(formatMonth(mockDate, 'hu'));
+        expect(getCaption()).toBe(formatMonth(mockDate, 'hu'));
       });
     });
 
     describe('monthAndYearFormat', () => {
-	  it('should default to long date format without days when set to undefined', () => {
+      it('should default to long date format without days when set to undefined', () => {
         component.monthAndYearFormat = 'MMM y';
         fixture.detectChanges();
 
@@ -151,8 +151,8 @@ describe('CalendarMonthHeaderComponent', () => {
         triggerOnPushChangeDetection();
         fixture.detectChanges();
         expect(getCaption()).toEqual(formatMonth(mockDate, 'en-US'));
-      }); 
-	});
+      });
+    });
   });
 
   afterAll(() => {

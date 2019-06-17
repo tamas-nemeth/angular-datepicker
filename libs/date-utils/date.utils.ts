@@ -1,4 +1,7 @@
+import { FormatWidth, getLocaleDateFormat } from '@angular/common';
+
 import { NumericDayOfWeek } from './day-of-week';
+import { memoize } from './memoize';
 
 export function setDay(date: Date, dayOfWeek: NumericDayOfWeek) {
   return addDays(date, dayOfWeek - date.getDay());
@@ -59,4 +62,35 @@ export function isDate(value?: any): value is Date {
 export function toISODateString(date: Date) {
   const offset = date.getTimezoneOffset();
   return new Date(date.getTime() - offset * 60 * 1000).toISOString().split('T')[0];
+}
+
+export const monthAndYearFormatOptions = {
+  year: 'numeric',
+  month: 'long'
+};
+
+export const getLocaleMonthAndYearFormat = memoize((locale: string) => {
+  if (Intl.DateTimeFormat.prototype.formatToParts) {
+    const monthAndYearFormatter = new Intl.DateTimeFormat(locale, monthAndYearFormatOptions);
+    return monthAndYearFormatter.formatToParts().map(({type, value}) => {
+      switch (type) {
+        case 'year':
+          return 'y';
+        case 'month':
+          return 'MMMM';
+        case 'literal':
+          return `'${value}'`;
+        default:
+          return '';
+      }
+    }).reduce((dateFormat, dateFormatPart) => dateFormat + dateFormatPart);
+  } else {
+    return getFallbackLocaleMonthAndYearFormat(locale);
+  }
+});
+
+export const localeDateFormatDayPart = /\s?d+(\.|,|\sde)?/;
+
+export function getFallbackLocaleMonthAndYearFormat(locale: string) {
+  return getLocaleDateFormat(locale!, FormatWidth.Long).replace(localeDateFormatDayPart, '').trim();
 }
