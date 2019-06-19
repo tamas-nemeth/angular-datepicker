@@ -91,6 +91,15 @@ export const getLocaleMonthAndYearFormat = memoize((locale: string) => {
 
 export const localeDateFormatDayPart = /\s?d+(\.|,|\sde)?/;
 
-export function getFallbackLocaleMonthAndYearFormat(locale: string) {
+export const getFallbackLocaleMonthAndYearFormat = memoize((locale: string) => {
   return getLocaleDateFormat(locale!, FormatWidth.Long).replace(localeDateFormatDayPart, '').trim();
+});
+
+export function toLocaleStringSupportsLocales() {
+  try {
+    new Date().toLocaleString('i');
+  } catch (e) {
+    return e instanceof RangeError;
+  }
+  return false;
 }

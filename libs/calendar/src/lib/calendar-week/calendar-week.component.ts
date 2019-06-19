@@ -8,8 +8,8 @@ import { FormStyle, getLocaleDayNames, TranslationWidth } from '@angular/common'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarWeekComponent implements OnInit {
-  daysOfWeek!: string[];
-  narrowDaysOfWeek!: string[];
+  daysOfWeek!: ReadonlyArray<string>;
+  narrowDaysOfWeek!: ReadonlyArray<string>;
 
   private _locale?: string;
 

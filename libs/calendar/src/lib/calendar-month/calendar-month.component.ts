@@ -9,9 +9,9 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import { WeekDay } from '@angular/common';
 
 import { areDatesInSameMonth, getDaysOfMonth, isDateAfter, isSameDate, startOfDay } from 'date-utils';
+import { WeekDay } from '@angular/common';
 
 @Component({
   selector: 'lib-calendar-month',
@@ -20,13 +20,14 @@ import { areDatesInSameMonth, getDaysOfMonth, isDateAfter, isSameDate, startOfDa
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarMonthComponent implements AfterViewInit, OnChanges {
-  daysOfMonth!: Date[];
+  daysOfMonth!: ReadonlyArray<Date>;
   firstDayOfMonth!: string;
 
   private readonly dateSelector = '.calendar-month__date';
 
   @Input() selectedDate?: Date;
   @Input() min?: Date;
+  @Input() locale?: string;
 
   private _month!: Date;
 

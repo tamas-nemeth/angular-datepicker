@@ -34,7 +34,7 @@ import { MonthStep } from './calendar-month-header/month-step.model';
   ]
 })
 export class CalendarComponent implements AfterContentInit, ControlValueAccessor, OnChanges, OnInit {
-  months!: Date[];
+  months!: ReadonlyArray<Date>;
   value?: Date;
   touched = false;
   disabled = false;
