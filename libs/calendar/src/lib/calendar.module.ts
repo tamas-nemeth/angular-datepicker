@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { A11yModule } from '@angular/cdk/a11y';
 
 import { CalendarComponent } from './calendar.component';
 import { CalendarMonthComponent } from './calendar-month/calendar-month.component';
@@ -16,7 +17,8 @@ import { MonthAndYearPipe } from './month-and-year/month-and-year.pipe';
     MonthAndYearPipe,
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    A11yModule,
   ],
   exports: [CalendarComponent]
 })

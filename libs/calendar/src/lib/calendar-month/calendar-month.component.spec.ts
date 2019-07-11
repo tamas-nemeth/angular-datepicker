@@ -1,7 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { formatDate } from '@angular/common';
 
-import { Month } from 'date-utils';
+import { getDaysOfMonth, Month } from 'date-utils';
 
 import { CalendarMonthComponent } from './calendar-month.component';
 
@@ -30,11 +31,29 @@ describe('CalendarMonthComponent', () => {
   it('should display the days of the month received via input', () => {
     component.month = new Date(2019, Month.February);
     const daysInFebruary = 28;
-    const rangeFrom1To31 = Array.from({length: daysInFebruary}, (_, index) => `${index + 1}`);
+    const rangeFrom1To28 = Array.from({length: daysInFebruary}, (_, index) => `${index + 1}`);
 
     fixture.detectChanges();
 
-    expect(getDaysOfMonth()).toEqual(rangeFrom1To31);
+    expect(getDates()).toEqual(rangeFrom1To28);
+  });
+
+  it('should display the days with the proper datetime attributes', () => {
+    component.month = new Date(2019, Month.February);
+    const daysInFebruary = 28;
+    const isoDatesInFebruary = Array.from({length: daysInFebruary}, (_, index) => `2019-02-${(index + 1).toString().padStart(2, '0')}`);
+
+    fixture.detectChanges();
+
+    expect(getDayDatetimeAttributes()).toEqual(isoDatesInFebruary);
+  });
+
+  it('should display the days with the proper ARIA labels', () => {
+    component.month = new Date(2019, Month.February);
+    const ariaLabelsInFebruary = getDaysOfMonth(component.month).map((date) => formatDate(date, 'fullDate', 'en-US'));
+    fixture.detectChanges();
+
+    expect(getDateAriaLabels()).toEqual(ariaLabelsInFebruary);
   });
 
   it('should NOT recreate daysOfMonth when a date from the same month is passed as an input', () => {
@@ -114,21 +133,21 @@ describe('CalendarMonthComponent', () => {
   it('should emit the selected date', () => {
     component.month = new Date(2019, Month.February);
     fixture.detectChanges();
-    spyOn(component.select, 'emit');
+    spyOn(component.selectedDateChange, 'emit');
 
     clickDay(14);
 
-    expect(component.select.emit).toHaveBeenCalledWith(valentinesDay);
+    expect(component.selectedDateChange.emit).toHaveBeenCalledWith(valentinesDay);
   });
 
-  it('should NOT emit when empty cell is clicked', () => {
+  it('should NOT emit selectedDateChange when empty cell is clicked', () => {
     component.month = new Date(2019, Month.February);
     fixture.detectChanges();
-    spyOn(component.select, 'emit');
+    spyOn(component.selectedDateChange, 'emit');
 
     clickOnMonthElement();
 
-    expect(component.select.emit).not.toHaveBeenCalled();
+    expect(component.selectedDateChange.emit).not.toHaveBeenCalled();
   });
 
   it('should add --selected class to selected day element', () => {
@@ -168,44 +187,44 @@ describe('CalendarMonthComponent', () => {
     component.month = new Date(2019, Month.February);
     component.min = new Date(2019, Month.February, 3);
     fixture.detectChanges();
-    spyOn(component.select, 'emit');
+    spyOn(component.selectedDateChange, 'emit');
 
     clickDay(2);
 
-    expect(component.select.emit).not.toHaveBeenCalled();
+    expect(component.selectedDateChange.emit).not.toHaveBeenCalled();
   });
 
   it('should select minimum date', () => {
     component.month = new Date(2019, Month.February);
     component.min = new Date(2019, Month.February, 3);
     fixture.detectChanges();
-    spyOn(component.select, 'emit');
+    spyOn(component.selectedDateChange, 'emit');
 
     clickDay(3);
 
-    expect(component.select.emit).toHaveBeenCalledWith(component.min);
+    expect(component.selectedDateChange.emit).toHaveBeenCalledWith(component.min);
   });
 
   it('should select day later than minimum date', () => {
     component.month = new Date(2019, Month.February);
     component.min = new Date(2019, Month.February, 3);
     fixture.detectChanges();
-    spyOn(component.select, 'emit');
+    spyOn(component.selectedDateChange, 'emit');
 
     clickDay(4);
 
-    expect(component.select.emit).toHaveBeenCalledWith(new Date(2019, Month.February, 4));
+    expect(component.selectedDateChange.emit).toHaveBeenCalledWith(new Date(2019, Month.February, 4));
   });
 
   it('should NOT select same date again', () => {
     component.month = new Date(2019, Month.February);
     component.selectedDate = valentinesDay;
     fixture.detectChanges();
-    spyOn(component.select, 'emit');
+    spyOn(component.selectedDateChange, 'emit');
 
     clickDay(14);
 
-    expect(component.select.emit).not.toHaveBeenCalled();
+    expect(component.selectedDateChange.emit).not.toHaveBeenCalled();
   });
 
   function clickDay(dayOfMonth: number) {
@@ -227,9 +246,17 @@ describe('CalendarMonthComponent', () => {
       .find(dayDebugElement => dayDebugElement.nativeElement.textContent === `${dayOfMonth}`);
   }
 
-  function getDaysOfMonth() {
+  function getDates() {
     return getDayDebugElements()
       .map(dayOfWeekDebugElement => dayOfWeekDebugElement.nativeElement.textContent);
+  }
+
+  function getDateAriaLabels() {
+    return getDayDebugElements().map(dayDebugElement => dayDebugElement.attributes['aria-label']);
+  }
+
+  function getDayDatetimeAttributes() {
+    return getDayDebugElements().map(dayDebugElement => dayDebugElement.attributes.datetime);
   }
 
   function getDayDebugElements() {

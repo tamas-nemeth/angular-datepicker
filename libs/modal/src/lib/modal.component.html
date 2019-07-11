@@ -6,5 +6,8 @@
              cdkConnectedOverlayBackdropClass="overlay__backdrop"
              (backdropClick)="toggleOverlay()"
 >
-  <ng-content></ng-content>
+  <div [cdkTrapFocus]="isOverlayOpen"
+       [cdkTrapFocusAutoCapture]="isOverlayOpen">
+    <ng-content></ng-content>
+  </div>
 </ng-template>

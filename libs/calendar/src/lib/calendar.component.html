@@ -1,6 +1,7 @@
 <div class="calendar"
      [ngClass]="'calendar--first-day-of-week-' + (firstDayOfWeek | lowercase)"
-     [class.calendar--disabled]="disabled">
+     [class.calendar--disabled]="disabled"
+>
   <lib-calendar-week [locale]="locale"></lib-calendar-week>
   <ng-container *ngFor="let month of months; trackBy: trackByMilliseconds">
     <lib-calendar-month-header [month]="month"
@@ -12,7 +13,9 @@
     <lib-calendar-month [month]="month"
                         [selectedDate]="value"
                         [min]="min"
-                        (select)="onSelect($event)"
+                        [activeDate]="activeDate"
+                        (selectedDateChange)="onSelect($event)"
+                        (dayStep)="onDayStep($event)"
     ></lib-calendar-month>
   </ng-container>
 </div>

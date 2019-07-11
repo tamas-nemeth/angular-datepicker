@@ -9,9 +9,18 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
+import { WeekDay } from '@angular/common';
+import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
 
 import { areDatesInSameMonth, getDaysOfMonth, isDateAfter, isSameDate, startOfDay } from 'date-utils';
-import { WeekDay } from '@angular/common';
+import { DayStep } from '../calendar-month-header/day-step.model';
+
+export const keyCodesToDaySteps = new Map<number, DayStep>([
+  [RIGHT_ARROW, 1],
+  [LEFT_ARROW, -1],
+  [DOWN_ARROW, 7],
+  [UP_ARROW, -7]
+]);
 
 @Component({
   selector: 'lib-calendar-month',
@@ -20,14 +29,16 @@ import { WeekDay } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarMonthComponent implements AfterViewInit, OnChanges {
-  daysOfMonth!: ReadonlyArray<Date>;
+  daysOfMonth!: readonly Date[];
   firstDayOfMonth!: string;
+  currentDate = startOfDay(new Date());
 
   private readonly dateSelector = '.calendar-month__date';
 
   @Input() selectedDate?: Date;
   @Input() min?: Date;
   @Input() locale?: string;
+  @Input() activeDate?: Date;
 
   private _month!: Date;
 
@@ -43,7 +54,8 @@ export class CalendarMonthComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  @Output() select = new EventEmitter<Date>();
+  @Output() selectedDateChange = new EventEmitter<Date>();
+  @Output() dayStep = new EventEmitter<DayStep>();
 
   constructor(public changeDetectorRef: ChangeDetectorRef) {}
 
@@ -65,6 +77,23 @@ export class CalendarMonthComponent implements AfterViewInit, OnChanges {
     return !!this.min && isDateAfter(this.min, dayOfMonth);
   }
 
+  isActive(dayOfMonth: Date) {
+    return !!this.activeDate && isSameDate(dayOfMonth, this.activeDate);
+  }
+
+  isCurrent(dayOfMonth: Date) {
+    return !!this.currentDate && isSameDate(dayOfMonth, this.currentDate);
+  }
+
+  onKeydown(event: KeyboardEvent) {
+    const daySteps = keyCodesToDaySteps.get(event.keyCode);
+
+    if (daySteps) {
+      event.preventDefault();
+      this.dayStep.emit(daySteps);
+    }
+  }
+
   onMonthClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
 
@@ -84,7 +113,7 @@ export class CalendarMonthComponent implements AfterViewInit, OnChanges {
 
   private selectDate(date: Date) {
     if (!this.isSelected(date) && !this.isDisabled(date)) {
-      this.select.emit(date);
+      this.selectedDateChange.emit(date);
     }
   }
 }

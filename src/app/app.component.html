@@ -6,13 +6,14 @@
       <label for="datepicker" class="form-control__label">Deadline for next feature</label><br>
       <span libModalToggle [modal]="datepickerModal">
         <input type="text" readonly id="datepicker" placeholder="Select date" [value]="datepickerControl.value | date">
-        <button type="button">📅</button>
+        <button type="button" aria-haspopup="dialog" aria-owns="datepicker-calendar">📅</button>
       </span>
     </div>
     <lib-modal #datepickerModal>
       <lib-calendar [formControl]="datepickerControl"
                     id="datepicker-calendar"
-                    (change)="datepickerModal.toggleOverlay()"></lib-calendar>
+                    (valueChange)="datepickerModal.toggleOverlay()"
+      ></lib-calendar>
     </lib-modal>
   </fieldset>
 

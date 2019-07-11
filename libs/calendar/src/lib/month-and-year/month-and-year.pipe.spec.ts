@@ -6,9 +6,8 @@ import { Month } from 'date-utils';
 
 import { MonthAndYearPipe } from './month-and-year.pipe';
 
-const defaultLocaleId = 'en-US';
-
 describe('MonthAndYearPipe', () => {
+  const defaultLocaleId = 'en-US';
   const localeMonthCaptionPatterns = {
     'en-US': 'MMMM y',
     'en-GB': 'MMMM y',
@@ -20,7 +19,9 @@ describe('MonthAndYearPipe', () => {
   beforeAll(() => {
     registerLocaleData(HungarianLocale);
     registerLocaleData(BritishLocale);
+  });
 
+  beforeEach(() => {
     pipe = new MonthAndYearPipe(defaultLocaleId);
   });
 

@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   forwardRef,
   Inject,
@@ -17,9 +18,11 @@ import { getLocaleFirstDayOfWeek, WeekDay } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 
-import { addMonths, isDate, startOfDay, startOfMonth } from 'date-utils';
+import { addMonths, addDays, isDate, startOfDay, startOfMonth, areDatesInSameMonth } from 'date-utils';
 
 import { MonthStep } from './calendar-month-header/month-step.model';
+import { DayStep } from './calendar-month-header/day-step.model';
+
 
 @Component({
   selector: 'lib-calendar',
@@ -34,16 +37,17 @@ import { MonthStep } from './calendar-month-header/month-step.model';
   ]
 })
 export class CalendarComponent implements AfterContentInit, ControlValueAccessor, OnChanges, OnInit {
-  months!: ReadonlyArray<Date>;
-  value?: Date;
+  months!: readonly Date[];
   touched = false;
   disabled = false;
   showMonthStepper = true;
+  activeDate = startOfDay(new Date());
 
   private onChange?: (updatedValue: Date) => void;
   private onTouched?: () => void;
   private monthStepperPosition?: Date;
 
+  @Input() value?: Date;
   @Input() min?: Date;
   @Input() monthAndYearFormat?: string;
 
@@ -94,9 +98,18 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     return this._numberOfMonths;
   }
 
-  @Output() change = new EventEmitter<Date>();
+  @Output() valueChange = new EventEmitter<Date>();
 
-  constructor(public changeDetectorRef: ChangeDetectorRef, @Inject(LOCALE_ID) private localeId: string) {}
+  trackByMilliseconds = (_: number, month: Date) => {
+    // avoid destroying month and month-header components in one-month view (with month steppers)
+    // otherwise month stepper buttons would lose focus after press
+    // also avoid destroying them when changing firstMonth in multi-month view
+    return this.numberOfMonths === 1 || month.getTime();
+  }
+
+  constructor(public changeDetectorRef: ChangeDetectorRef,
+              @Inject(LOCALE_ID) private localeId: string,
+              private elementRef: ElementRef) {}
 
   ngOnInit() {
     if (!this.locale) {
@@ -115,12 +128,24 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     }
   }
 
-  trackByMilliseconds(_: number, month: Date) {
-    return month.getTime();
+  onDayStep(daySteps: DayStep) {
+    this.activeDate = addDays(this.activeDate, daySteps);
+
+    if (!areDatesInSameMonth(this.activeDate, this.monthStepperPosition || new Date())) {
+      this.monthStepperPosition = startOfMonth(this.activeDate);
+      if (this.numberOfMonths === 1) {
+        this.months = this.getMonths();
+      }
+    }
+
+    setTimeout(() => {
+      this.elementRef.nativeElement.querySelector('[tabindex="0"]').focus();
+    });
   }
 
   onMonthStep(step: MonthStep) {
     this.monthStepperPosition = addMonths(this.monthStepperPosition || new Date(), step);
+    this.activeDate = addMonths(this.activeDate, step);
     this.months = this.getMonths();
   }
 
@@ -128,7 +153,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     if (!this.disabled) {
       this.value = date;
       this.monthStepperPosition = date;
-      this.change.emit(date);
+      this.valueChange.emit(date);
       if (this.onChange) {
         this.onChange(date);
       }

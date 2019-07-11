@@ -29,6 +29,10 @@
     @include calendarGridCell();
     cursor: pointer;
 
+    &--active {
+      background-color: rgba(chocolate, .4);
+    }
+
     &--selected {
       background-color: chocolate;
       color: white;

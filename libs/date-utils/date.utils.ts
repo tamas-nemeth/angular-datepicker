@@ -69,6 +69,12 @@ export const monthAndYearFormatOptions = {
   month: 'long'
 };
 
+export const localeDateFormatDayPart = /\s?d+(\.|,|\sde)?/;
+
+export const getFallbackLocaleMonthAndYearFormat = memoize((locale: string) => {
+  return getLocaleDateFormat(locale!, FormatWidth.Long).replace(localeDateFormatDayPart, '').trim();
+});
+
 export const getLocaleMonthAndYearFormat = memoize((locale: string) => {
   if (Intl.DateTimeFormat.prototype.formatToParts) {
     const monthAndYearFormatter = new Intl.DateTimeFormat(locale, monthAndYearFormatOptions);
@@ -87,12 +93,6 @@ export const getLocaleMonthAndYearFormat = memoize((locale: string) => {
   } else {
     return getFallbackLocaleMonthAndYearFormat(locale);
   }
-});
-
-export const localeDateFormatDayPart = /\s?d+(\.|,|\sde)?/;
-
-export const getFallbackLocaleMonthAndYearFormat = memoize((locale: string) => {
-  return getLocaleDateFormat(locale!, FormatWidth.Long).replace(localeDateFormatDayPart, '').trim();
 });
 
 export function toLocaleStringSupportsLocales() {

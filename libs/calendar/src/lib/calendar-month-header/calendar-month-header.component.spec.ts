@@ -1,8 +1,9 @@
 import { PipeTransform } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { CdkAriaLive } from '@angular/cdk/a11y';
 
-import { MockPipe } from 'ng-mocks';
+import { MockDirective, MockPipe } from 'ng-mocks';
 
 import { Month } from 'date-utils';
 
@@ -23,7 +24,10 @@ describe('CalendarMonthHeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CalendarMonthHeaderComponent, MockPipe(MonthAndYearPipe, mockPipeTransform<MonthAndYearPipe>('monthAndYearPipe'))]
+      declarations: [
+        CalendarMonthHeaderComponent,
+        MockDirective(CdkAriaLive),
+        MockPipe(MonthAndYearPipe, mockPipeTransform<MonthAndYearPipe>('monthAndYearPipe'))]
     })
       .compileComponents();
   }));
@@ -107,6 +111,12 @@ describe('CalendarMonthHeaderComponent', () => {
 
       expect(component.monthStep.emit).toHaveBeenCalledWith(-1);
     });
+
+    it('should announce month change politely', () => {
+      fixture.detectChanges();
+
+      expect(getCaptionDebugElement().attributes.cdkAriaLive).toBe('polite');
+    });
   });
 
   afterAll(() => {
@@ -114,7 +124,11 @@ describe('CalendarMonthHeaderComponent', () => {
   });
 
   function getCaption() {
-    return fixture.debugElement.query(By.css('.calendar-month-header__caption')).nativeElement.textContent;
+    return getCaptionDebugElement().nativeElement.textContent;
+  }
+
+  function getCaptionDebugElement() {
+    return fixture.debugElement.query(By.css('.calendar-month-header__caption'));
   }
 
   function stepMonth(monthStep: MonthStep) {
