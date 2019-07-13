@@ -4,22 +4,22 @@ import { registerLocaleData } from '@angular/common';
 import HungarianLocale from '@angular/common/locales/hu';
 import { By } from '@angular/platform-browser';
 
-import { CalendarWeekComponent } from './calendar-week.component';
+import { DaysOfWeekComponent } from './days-of-week.component';
 
-describe('CalendarWeekComponent', () => {
-  let component: CalendarWeekComponent;
-  let fixture: ComponentFixture<CalendarWeekComponent>;
+describe('DaysOfWeekComponent', () => {
+  let component: DaysOfWeekComponent;
+  let fixture: ComponentFixture<DaysOfWeekComponent>;
 
   describe('', () => {
     beforeEach(async(() => {
       TestBed.configureTestingModule({
-        declarations: [CalendarWeekComponent]
+        declarations: [DaysOfWeekComponent]
       })
         .compileComponents();
     }));
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(CalendarWeekComponent);
+      fixture = TestBed.createComponent(DaysOfWeekComponent);
       component = fixture.componentInstance;
     });
 
@@ -62,7 +62,7 @@ describe('CalendarWeekComponent', () => {
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
-        declarations: [CalendarWeekComponent],
+        declarations: [DaysOfWeekComponent],
         providers: [
           {provide: LOCALE_ID, useFactory: () => localeId}
         ]
@@ -74,7 +74,7 @@ describe('CalendarWeekComponent', () => {
       registerLocaleData(HungarianLocale);
       localeId = 'hu';
 
-      fixture = TestBed.createComponent(CalendarWeekComponent);
+      fixture = TestBed.createComponent(DaysOfWeekComponent);
       component = fixture.componentInstance;
     });
 
@@ -118,6 +118,6 @@ describe('CalendarWeekComponent', () => {
   }
 
   function getDayOfWeekDebugElements() {
-    return fixture.debugElement.queryAll(By.css('.calendar-week__day'));
+    return fixture.debugElement.queryAll(By.css('.days-of-week__day'));
   }
 });

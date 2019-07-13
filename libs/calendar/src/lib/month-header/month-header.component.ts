@@ -1,22 +1,22 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { MonthStep } from './month-step.model';
+import { MonthStepDelta } from './month-step-delta.model';
 
 @Component({
-  selector: 'lib-calendar-month-header',
-  templateUrl: './calendar-month-header.component.html',
-  styleUrls: ['./calendar-month-header.component.scss'],
+  selector: 'lib-month-header',
+  templateUrl: './month-header.component.html',
+  styleUrls: ['./month-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CalendarMonthHeaderComponent {
+export class MonthHeaderComponent {
   @Input() showMonthStepper = true;
   @Input() month = new Date();
   @Input() monthAndYearFormat?: string;
   @Input() locale?: string;
 
-  @Output() monthStep = new EventEmitter<MonthStep>();
+  @Output() monthStep = new EventEmitter<MonthStepDelta>();
 
-  stepMonth(step: MonthStep) {
+  stepMonth(step: MonthStepDelta) {
     this.monthStep.emit(step);
   }
 

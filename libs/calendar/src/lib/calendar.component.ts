@@ -20,9 +20,8 @@ import { coerceNumberProperty } from '@angular/cdk/coercion';
 
 import { addMonths, addDays, isDate, startOfDay, startOfMonth, areDatesInSameMonth } from 'date-utils';
 
-import { MonthStep } from './calendar-month-header/month-step.model';
-import { DayStep } from './calendar-month-header/day-step.model';
-
+import { MonthStepDelta } from './month-header/month-step-delta.model';
+import { DayStepDelta } from './month/day-step-delta.model';
 
 @Component({
   selector: 'lib-calendar',
@@ -45,7 +44,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
 
   private onChange?: (updatedValue: Date) => void;
   private onTouched?: () => void;
-  private monthStepperPosition?: Date;
+  private activeMonth?: Date;
 
   @Input() value?: Date;
   @Input() min?: Date;
@@ -79,7 +78,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   @Input()
   set firstMonth(firstMonth: Date | undefined) {
     this._firstMonth = firstMonth;
-    this.monthStepperPosition = this._firstMonth;
+    this.activeMonth = this._firstMonth;
   }
 
   get firstMonth(): Date | undefined {
@@ -128,11 +127,11 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     }
   }
 
-  onDayStep(daySteps: DayStep) {
+  onDayStep(daySteps: DayStepDelta) {
     this.activeDate = addDays(this.activeDate, daySteps);
 
-    if (!areDatesInSameMonth(this.activeDate, this.monthStepperPosition || new Date())) {
-      this.monthStepperPosition = startOfMonth(this.activeDate);
+    if (!areDatesInSameMonth(this.activeDate, this.activeMonth || new Date())) {
+      this.activeMonth = startOfMonth(this.activeDate);
       if (this.numberOfMonths === 1) {
         this.months = this.getMonths();
       }
@@ -143,8 +142,8 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     });
   }
 
-  onMonthStep(step: MonthStep) {
-    this.monthStepperPosition = addMonths(this.monthStepperPosition || new Date(), step);
+  onMonthStep(step: MonthStepDelta) {
+    this.activeMonth = addMonths(this.activeMonth || new Date(), step);
     this.activeDate = addMonths(this.activeDate, step);
     this.months = this.getMonths();
   }
@@ -152,7 +151,8 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   onSelect(date: Date) {
     if (!this.disabled) {
       this.value = date;
-      this.monthStepperPosition = date;
+      this.activeMonth = date;
+      this.activeDate = date;
       this.valueChange.emit(date);
       if (this.onChange) {
         this.onChange(date);
@@ -169,7 +169,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     this.changeDetectorRef.markForCheck();
 
     if (this.showMonthStepper && this.value) {
-      this.monthStepperPosition = this.value;
+      this.activeMonth = this.value;
       this.months = this.getMonths();
     }
   }
@@ -191,7 +191,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   }
 
   private getMonths() {
-    const firstMonth = (this.showMonthStepper ? this.monthStepperPosition : this.firstMonth) || new Date();
+    const firstMonth = (this.showMonthStepper ? this.activeMonth : this.firstMonth) || new Date();
     const startOfFirstMonth = startOfMonth(firstMonth);
     return Array.from({length: this.numberOfMonths}, (_, index) => addMonths(startOfFirstMonth, index));
   }

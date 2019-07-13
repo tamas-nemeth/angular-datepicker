@@ -6,7 +6,7 @@
   cursor: initial;
 }
 
-.calendar-month {
+.month {
   @include calendarGrid();
 
   @each $first-day-of-week, $days-of-week in $first-day-of-week-to-days-of-week {

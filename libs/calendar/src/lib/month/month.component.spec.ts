@@ -4,22 +4,24 @@ import { formatDate } from '@angular/common';
 
 import { getDaysOfMonth, Month } from 'date-utils';
 
-import { CalendarMonthComponent } from './calendar-month.component';
+import { MonthComponent } from './month.component';
 
-describe('CalendarMonthComponent', () => {
+describe('MonthComponent', () => {
   const valentinesDay = new Date(2019, Month.February, 14);
-  let component: CalendarMonthComponent;
-  let fixture: ComponentFixture<CalendarMonthComponent>;
+  const selectedModifierClass = 'month__date--selected';
+  const disabledModifierClass = 'month__date--disabled';
+  let component: MonthComponent;
+  let fixture: ComponentFixture<MonthComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CalendarMonthComponent]
+      declarations: [MonthComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CalendarMonthComponent);
+    fixture = TestBed.createComponent(MonthComponent);
     component = fixture.componentInstance;
   });
 
@@ -127,7 +129,7 @@ describe('CalendarMonthComponent', () => {
 
     fixture.detectChanges();
 
-    expect(getMonthDebugElement().classes['calendar-month--first-day-friday']).toBe(true);
+    expect(getMonthDebugElement().classes['month--first-day-friday']).toBe(true);
   });
 
   it('should emit the selected date', () => {
@@ -155,7 +157,7 @@ describe('CalendarMonthComponent', () => {
     component.selectedDate = valentinesDay;
     fixture.detectChanges();
 
-    expect(getDayDebugElement(14)!.classes['calendar-month__date--selected']).toBe(true);
+    expect(getDayDebugElement(14)!.classes[selectedModifierClass]).toBe(true);
   });
 
   it('should add --disabled class to a day earlier than minimum date', () => {
@@ -163,8 +165,8 @@ describe('CalendarMonthComponent', () => {
     component.min = new Date(2019, Month.February, 3);
     fixture.detectChanges();
 
-    expect(getDayDebugElement(1)!.classes['calendar-month__date--disabled']).toBe(true);
-    expect(getDayDebugElement(2)!.classes['calendar-month__date--disabled']).toBe(true);
+    expect(getDayDebugElement(1)!.classes[disabledModifierClass]).toBe(true);
+    expect(getDayDebugElement(2)!.classes[disabledModifierClass]).toBe(true);
   });
 
   it('should NOT add --disabled class to minimum date', () => {
@@ -172,7 +174,7 @@ describe('CalendarMonthComponent', () => {
     component.min = new Date(2019, Month.February, 3);
     fixture.detectChanges();
 
-    expect(getDayDebugElement(3)!.classes['calendar-month__date--disabled']).toBe(false);
+    expect(getDayDebugElement(3)!.classes[disabledModifierClass]).toBe(false);
   });
 
   it('should NOT add --disabled class to a day later than minimum date', () => {
@@ -180,7 +182,7 @@ describe('CalendarMonthComponent', () => {
     component.min = new Date(2019, Month.February, 3);
     fixture.detectChanges();
 
-    expect(getDayDebugElement(4)!.classes['calendar-month__date--disabled']).toBe(false);
+    expect(getDayDebugElement(4)!.classes[disabledModifierClass]).toBe(false);
   });
 
   it('should NOT select disabled date', () => {
@@ -260,10 +262,10 @@ describe('CalendarMonthComponent', () => {
   }
 
   function getDayDebugElements() {
-    return fixture.debugElement.queryAll(By.css('.calendar-month__date'));
+    return fixture.debugElement.queryAll(By.css('.month__date'));
   }
 
   function getMonthDebugElement() {
-    return fixture.debugElement.query(By.css('.calendar-month'));
+    return fixture.debugElement.query(By.css('.month'));
   }
 });

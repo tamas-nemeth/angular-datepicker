@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, Inject, Input, LOCALE_ID, OnInit } 
 import { FormStyle, getLocaleDayNames, TranslationWidth } from '@angular/common';
 
 @Component({
-  selector: 'lib-calendar-week',
-  templateUrl: './calendar-week.component.html',
-  styleUrls: ['./calendar-week.component.scss'],
+  selector: 'lib-days-of-week',
+  templateUrl: './days-of-week.component.html',
+  styleUrls: ['./days-of-week.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CalendarWeekComponent implements OnInit {
+export class DaysOfWeekComponent implements OnInit {
   daysOfWeek!: readonly string[];
   narrowDaysOfWeek!: readonly string[];
 

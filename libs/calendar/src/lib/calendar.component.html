@@ -2,20 +2,20 @@
      [ngClass]="'calendar--first-day-of-week-' + (firstDayOfWeek | lowercase)"
      [class.calendar--disabled]="disabled"
 >
-  <lib-calendar-week [locale]="locale"></lib-calendar-week>
+  <lib-days-of-week [locale]="locale"></lib-days-of-week>
   <ng-container *ngFor="let month of months; trackBy: trackByMilliseconds">
-    <lib-calendar-month-header [month]="month"
-                               [monthAndYearFormat]="monthAndYearFormat"
-                               [showMonthStepper]="showMonthStepper"
-                               [locale]="locale"
-                               (monthStep)="onMonthStep($event)"
-    ></lib-calendar-month-header>
-    <lib-calendar-month [month]="month"
-                        [selectedDate]="value"
-                        [min]="min"
-                        [activeDate]="activeDate"
-                        (selectedDateChange)="onSelect($event)"
-                        (dayStep)="onDayStep($event)"
-    ></lib-calendar-month>
+    <lib-month-header [month]="month"
+                      [monthAndYearFormat]="monthAndYearFormat"
+                      [showMonthStepper]="showMonthStepper"
+                      [locale]="locale"
+                      (monthStep)="onMonthStep($event)"
+    ></lib-month-header>
+    <lib-month [month]="month"
+               [selectedDate]="value"
+               [min]="min"
+               [activeDate]="activeDate"
+               (selectedDateChange)="onSelect($event)"
+               (dayStep)="onDayStep($event)"
+    ></lib-month>
   </ng-container>
 </div>

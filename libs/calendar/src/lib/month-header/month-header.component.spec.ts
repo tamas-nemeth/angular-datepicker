@@ -7,14 +7,14 @@ import { MockDirective, MockPipe } from 'ng-mocks';
 
 import { Month } from 'date-utils';
 
-import { CalendarMonthHeaderComponent } from './calendar-month-header.component';
+import { MonthHeaderComponent } from './month-header.component';
 import { MonthAndYearPipe } from '../month-and-year/month-and-year.pipe';
 
 type MonthStep = 'previous' | 'next';
 
-describe('CalendarMonthHeaderComponent', () => {
-  let component: CalendarMonthHeaderComponent;
-  let fixture: ComponentFixture<CalendarMonthHeaderComponent>;
+describe('MonthHeaderComponent', () => {
+  let component: MonthHeaderComponent;
+  let fixture: ComponentFixture<MonthHeaderComponent>;
   let mockDate: Date;
 
   beforeAll(() => {
@@ -25,7 +25,7 @@ describe('CalendarMonthHeaderComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        CalendarMonthHeaderComponent,
+        MonthHeaderComponent,
         MockDirective(CdkAriaLive),
         MockPipe(MonthAndYearPipe, mockPipeTransform<MonthAndYearPipe>('monthAndYearPipe'))]
     })
@@ -37,7 +37,7 @@ describe('CalendarMonthHeaderComponent', () => {
   }
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CalendarMonthHeaderComponent);
+    fixture = TestBed.createComponent(MonthHeaderComponent);
     component = fixture.componentInstance;
   });
 
@@ -128,7 +128,7 @@ describe('CalendarMonthHeaderComponent', () => {
   }
 
   function getCaptionDebugElement() {
-    return fixture.debugElement.query(By.css('.calendar-month-header__caption'));
+    return fixture.debugElement.query(By.css('.month-header__caption'));
   }
 
   function stepMonth(monthStep: MonthStep) {
@@ -136,10 +136,10 @@ describe('CalendarMonthHeaderComponent', () => {
   }
 
   function getMonthStepperButton(monthStep: MonthStep) {
-    return fixture.debugElement.query(By.css(`.calendar-month-header__stepper--${monthStep}`));
+    return fixture.debugElement.query(By.css(`.month-header__stepper--${monthStep}`));
   }
 
   function getMonthStepperButtons() {
-    return fixture.debugElement.query(By.css('.calendar-month-header__stepper'));
+    return fixture.debugElement.query(By.css('.month-header__stepper'));
   }
 });

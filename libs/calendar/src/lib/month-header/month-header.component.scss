@@ -1,6 +1,6 @@
 @import "../calendar-mixins";
 
-.calendar-month-header {
+.month-header {
   @include calendarGrid();
   background-color: snow;
   font-weight: bold;

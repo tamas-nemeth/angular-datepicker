@@ -8,10 +8,10 @@ import { MockComponent } from 'ng-mocks';
 import { addMonths, Month, startOfMonth } from 'date-utils';
 
 import { CalendarComponent } from './calendar.component';
-import { CalendarWeekComponent } from './calendar-week/calendar-week.component';
-import { CalendarMonthComponent } from './calendar-month/calendar-month.component';
-import { MonthStep } from './calendar-month-header/month-step.model';
-import { CalendarMonthHeaderComponent } from './calendar-month-header/calendar-month-header.component';
+import { DaysOfWeekComponent } from './days-of-week/days-of-week.component';
+import { MonthComponent } from './month/month.component';
+import { MonthStepDelta } from './month-header/month-step-delta.model';
+import { MonthHeaderComponent } from './month-header/month-header.component';
 
 const defaultDate = new Date(2019, Month.February, 10);
 
@@ -58,9 +58,9 @@ describe('CalendarComponent', () => {
       declarations: [
         CalendarWrapperComponent,
         CalendarComponent,
-        MockComponent(CalendarWeekComponent),
-        MockComponent(CalendarMonthHeaderComponent),
-        MockComponent(CalendarMonthComponent)
+        MockComponent(DaysOfWeekComponent),
+        MockComponent(MonthHeaderComponent),
+        MockComponent(MonthComponent)
       ]
     })
       .compileComponents();
@@ -489,10 +489,10 @@ describe('CalendarComponent', () => {
   }
 
   function getMonthComponentDebugElements() {
-    return fixture.debugElement.queryAll(By.css('lib-calendar-month'));
+    return fixture.debugElement.queryAll(By.css('lib-month'));
   }
 
-  function stepMonth(step: MonthStep) {
+  function stepMonth(step: MonthStepDelta) {
     getMonthHeaderComponentDebugElement().triggerEventHandler('monthStep', step);
   }
 
@@ -501,6 +501,6 @@ describe('CalendarComponent', () => {
   }
 
   function getMonthHeaderComponentDebugElements() {
-    return fixture.debugElement.queryAll(By.css('lib-calendar-month-header'));
+    return fixture.debugElement.queryAll(By.css('lib-month-header'));
   }
 });
