@@ -47,7 +47,7 @@ describe('MonthComponent', () => {
 
     fixture.detectChanges();
 
-    expect(getDayDatetimeAttributes()).toEqual(isoDatesInFebruary);
+    expect(getDayDateTimeProperties()).toEqual(isoDatesInFebruary);
   });
 
   it('should display the days with the proper ARIA labels', () => {
@@ -229,6 +229,23 @@ describe('MonthComponent', () => {
     expect(component.selectedDateChange.emit).not.toHaveBeenCalled();
   });
 
+  it('should make all dates focusable programatically', () => {
+    component.month = new Date(2019, Month.August);
+    const daysInAugust = 31;
+    fixture.detectChanges();
+
+    expect(getDayTabIndexes()).toEqual(new Array(daysInAugust).fill(-1));
+  });
+
+  it('should put the active date in the tab order', () => {
+    component.month = new Date(2019, Month.August);
+    component.activeDate = new Date(2019, Month.August, 1);
+    const daysInAugust = 31;
+    fixture.detectChanges();
+
+    expect(getDayTabIndexes()).toEqual([0].concat(new Array(daysInAugust - 1).fill(-1)));
+  });
+
   function clickDay(dayOfMonth: number) {
     const dayDebugElement = getDayDebugElement(dayOfMonth);
 
@@ -257,8 +274,12 @@ describe('MonthComponent', () => {
     return getDayDebugElements().map(dayDebugElement => dayDebugElement.attributes['aria-label']);
   }
 
-  function getDayDatetimeAttributes() {
-    return getDayDebugElements().map(dayDebugElement => dayDebugElement.attributes.datetime);
+  function getDayDateTimeProperties() {
+    return getDayDebugElements().map(dayDebugElement => dayDebugElement.properties.dateTime);
+  }
+
+  function getDayTabIndexes() {
+    return getDayDebugElements().map(dayDebugElement => dayDebugElement.properties.tabIndex);
   }
 
   function getDayDebugElements() {

@@ -92,24 +92,26 @@ describe('MonthHeaderComponent', () => {
       expect(getMonthStepperButtons()).toBeFalsy();
     });
 
-    it('should emit monthStep on next month click', () => {
+    it('should emit activeMonthChange on next month click', () => {
       component.showMonthStepper = true;
-      spyOn(component.monthStep, 'emit');
+      component.activeMonth = new Date(2019, Month.July);
+      spyOn(component.activeMonthChange, 'emit');
       fixture.detectChanges();
 
-      stepMonth('next');
+      clickMonthStepperButton('next');
 
-      expect(component.monthStep.emit).toHaveBeenCalledWith(1);
+      expect(component.activeMonthChange.emit).toHaveBeenCalledWith(new Date(2019, Month.August));
     });
 
-    it('should emit monthStep on previous month click', () => {
+    it('should emit activeMonthChange on previous month click', () => {
       component.showMonthStepper = true;
-      spyOn(component.monthStep, 'emit');
+      component.activeMonth = new Date(2019, Month.July);
+      spyOn(component.activeMonthChange, 'emit');
       fixture.detectChanges();
 
-      stepMonth('previous');
+      clickMonthStepperButton('previous');
 
-      expect(component.monthStep.emit).toHaveBeenCalledWith(-1);
+      expect(component.activeMonthChange.emit).toHaveBeenCalledWith(new Date(2019, Month.June));
     });
 
     it('should announce month change politely', () => {
@@ -131,7 +133,7 @@ describe('MonthHeaderComponent', () => {
     return fixture.debugElement.query(By.css('.month-header__caption'));
   }
 
-  function stepMonth(monthStep: MonthStep) {
+  function clickMonthStepperButton(monthStep: MonthStep) {
     return getMonthStepperButton(monthStep).triggerEventHandler('click', null);
   }
 

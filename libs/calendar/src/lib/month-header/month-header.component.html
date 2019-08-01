@@ -6,7 +6,7 @@
           aria-label="Previous month"
   >◀</button>
   <time class="month-header__caption"
-        [attr.datetime]="month | date:'yyyy-MM'"
+        [dateTime]="month | date:'yyyy-MM'"
         cdkAriaLive="polite"
   >{{month | monthAndYear:locale:monthAndYearFormat}}</time>
   <button class="month-header__stepper month-header__stepper--next"

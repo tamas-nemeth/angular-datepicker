@@ -5,12 +5,11 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { MockComponent } from 'ng-mocks';
 
-import { addMonths, Month, startOfMonth } from 'date-utils';
+import { Month, startOfMonth } from 'date-utils';
 
 import { CalendarComponent } from './calendar.component';
 import { DaysOfWeekComponent } from './days-of-week/days-of-week.component';
 import { MonthComponent } from './month/month.component';
-import { MonthStepDelta } from './month-header/month-step-delta.model';
 import { MonthHeaderComponent } from './month-header/month-header.component';
 
 const defaultDate = new Date(2019, Month.February, 10);
@@ -174,27 +173,29 @@ describe('CalendarComponent', () => {
       ]);
     });
 
-    describe('month step', () => {
-      it('should display next month', () => {
+    describe('on activeMonthChange', () => {
+      it('should display the emitted month in one-month view', () => {
         component.numberOfMonths = 1;
-        component.firstMonth = new Date(2019, Month.February);
+        component.firstMonth = new Date(2019, Month.July);
         fixture.detectChanges();
 
-        stepMonth(1);
+        triggerActiveMonthChange(new Date(2019, Month.August));
         fixture.detectChanges();
 
-        expect(getMonths()).toEqual([new Date(2019, Month.March)]);
+        expect(getMonths()).toEqual([new Date(2019, Month.August)]);
       });
 
-      it('should display month after current one if firstMonth is not specified', () => {
+      it('should display emitted month if firstMonth is not specified', () => {
         component.numberOfMonths = 1;
         // component.firstMonth = undefined;
         fixture.detectChanges();
 
-        stepMonth(1);
+        triggerActiveMonthChange(new Date(2019, Month.March));
         fixture.detectChanges();
 
-        expect(getMonths()).toEqual([addMonths(monthOfMockDate, 1)]);
+        expect(getMonths()).toEqual([
+          new Date(2019, Month.March)
+        ]);
       });
 
       it('should jump to the month of the selected date when switching back to one-month view', () => {
@@ -216,12 +217,12 @@ describe('CalendarComponent', () => {
 
         expect(getMonths()).toEqual([startOfMonth(piDay)]);
 
-        stepMonth(1);
+        triggerActiveMonthChange(new Date(2019, Month.April));
         fixture.detectChanges();
 
         expect(getMonths()).toEqual([new Date(2019, Month.April)]);
 
-        stepMonth(1);
+        triggerActiveMonthChange(new Date(2019, Month.May));
         fixture.detectChanges();
 
         expect(getMonths()).toEqual([new Date(2019, Month.May)]);
@@ -232,12 +233,12 @@ describe('CalendarComponent', () => {
         component.firstMonth = new Date(2019, Month.February);
         fixture.detectChanges();
 
-        stepMonth(1);
+        triggerActiveMonthChange(new Date(2019, Month.March));
         fixture.detectChanges();
 
         expect(getMonths()).toEqual([new Date(2019, Month.March)]);
 
-        stepMonth(1);
+        triggerActiveMonthChange(new Date(2019, Month.April));
         fixture.detectChanges();
 
         expect(getMonths()).toEqual([new Date(2019, Month.April)]);
@@ -253,7 +254,7 @@ describe('CalendarComponent', () => {
         });
         // just trigger an event that triggers change detection
         // month won't be stepped in multi-month view
-        stepMonth(1);
+        triggerActiveMonthChange(new Date(2019, Month.July));
         fixture.detectChanges();
 
         expect(getMonths()).toEqual([
@@ -356,9 +357,17 @@ describe('CalendarComponent', () => {
         expect(component.showMonthStepper).toBe(true);
       });
 
-      it('should be false in multi-month view', () => {
+      it('should be true in two-month view', () => {
         component.firstMonth = new Date(2019, Month.February);
         component.numberOfMonths = 2;
+        fixture.detectChanges();
+
+        expect(component.showMonthStepper).toBe(true);
+      });
+
+      it('should be false in multi-month view', () => {
+        component.firstMonth = new Date(2019, Month.February);
+        component.numberOfMonths = 3;
         fixture.detectChanges();
 
         expect(component.showMonthStepper).toBe(false);
@@ -456,12 +465,12 @@ describe('CalendarComponent', () => {
 
       expect(getMonths()).toEqual([new Date(2019, Month.March)]);
 
-      stepMonth(1);
+      triggerActiveMonthChange(new Date(2019, Month.April));
       fixture.detectChanges();
 
       expect(getMonths()).toEqual([new Date(2019, Month.April)]);
 
-      stepMonth(1);
+      triggerActiveMonthChange(new Date(2019, Month.May));
       fixture.detectChanges();
 
       expect(getMonths()).toEqual([new Date(2019, Month.May)]);
@@ -492,8 +501,8 @@ describe('CalendarComponent', () => {
     return fixture.debugElement.queryAll(By.css('lib-month'));
   }
 
-  function stepMonth(step: MonthStepDelta) {
-    getMonthHeaderComponentDebugElement().triggerEventHandler('monthStep', step);
+  function triggerActiveMonthChange(activeMonth: Date) {
+    getMonthHeaderComponentDebugElement().triggerEventHandler('activeMonthChange', activeMonth);
   }
 
   function getMonthHeaderComponentDebugElement() {

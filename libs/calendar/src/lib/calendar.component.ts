@@ -18,10 +18,8 @@ import { getLocaleFirstDayOfWeek, WeekDay } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 
-import { addMonths, addDays, isDate, startOfDay, startOfMonth, areDatesInSameMonth } from 'date-utils';
-
-import { MonthStepDelta } from './month-header/month-step-delta.model';
-import { DayStepDelta } from './month/day-step-delta.model';
+import { addMonths, areDatesInSameMonth, isValidDate, setDate, startOfDay, startOfMonth } from 'date-utils';
+import { CustomControl } from '../../../modal/src/lib/custom-control';
 
 @Component({
   selector: 'lib-calendar',
@@ -32,19 +30,23 @@ import { DayStepDelta } from './month/day-step-delta.model';
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => CalendarComponent),
       multi: true
+    },
+    {
+      provide: CustomControl,
+      useExisting: CalendarComponent
     }
   ]
 })
-export class CalendarComponent implements AfterContentInit, ControlValueAccessor, OnChanges, OnInit {
+export class CalendarComponent extends CustomControl<Date> implements AfterContentInit, ControlValueAccessor, OnChanges, OnInit {
   months!: readonly Date[];
   touched = false;
   disabled = false;
   showMonthStepper = true;
   activeDate = startOfDay(new Date());
+  activeMonth?: Date;
 
   private onChange?: (updatedValue: Date) => void;
   private onTouched?: () => void;
-  private activeMonth?: Date;
 
   @Input() value?: Date;
   @Input() min?: Date;
@@ -90,7 +92,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
   @Input()
   set numberOfMonths(numberOfMonths: any) {
     this._numberOfMonths = coerceNumberProperty(numberOfMonths);
-    this.showMonthStepper = this._numberOfMonths === 1;
+    this.showMonthStepper = this._numberOfMonths <= 2;
   }
 
   get numberOfMonths() {
@@ -103,12 +105,14 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     // avoid destroying month and month-header components in one-month view (with month steppers)
     // otherwise month stepper buttons would lose focus after press
     // also avoid destroying them when changing firstMonth in multi-month view
-    return this.numberOfMonths === 1 || month.getTime();
+    return this.showMonthStepper || month.getTime();
   }
 
   constructor(public changeDetectorRef: ChangeDetectorRef,
               @Inject(LOCALE_ID) private localeId: string,
-              private elementRef: ElementRef) {}
+              private elementRef: ElementRef) {
+    super();
+  }
 
   ngOnInit() {
     if (!this.locale) {
@@ -127,12 +131,12 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     }
   }
 
-  onDayStep(daySteps: DayStepDelta) {
-    this.activeDate = addDays(this.activeDate, daySteps);
+  onActiveDateChange(activeDate: Date) {
+    this.activeDate = activeDate;
 
     if (!areDatesInSameMonth(this.activeDate, this.activeMonth || new Date())) {
       this.activeMonth = startOfMonth(this.activeDate);
-      if (this.numberOfMonths === 1) {
+      if (this.showMonthStepper) {
         this.months = this.getMonths();
       }
     }
@@ -142,9 +146,9 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
     });
   }
 
-  onMonthStep(step: MonthStepDelta) {
-    this.activeMonth = addMonths(this.activeMonth || new Date(), step);
-    this.activeDate = addMonths(this.activeDate, step);
+  onActiveMonthChange(activeMonth: Date) {
+    this.activeMonth = activeMonth;
+    this.activeDate = setDate(this.activeMonth, this.activeDate.getDate());
     this.months = this.getMonths();
   }
 
@@ -165,7 +169,7 @@ export class CalendarComponent implements AfterContentInit, ControlValueAccessor
 
   writeValue(value: Date) {
     // TODO: what if calendar or the given date is disabled?
-    this.value = isDate(value) ? startOfDay(value) : undefined;
+    this.value = isValidDate(value) ? startOfDay(value) : undefined;
     this.changeDetectorRef.markForCheck();
 
     if (this.showMonthStepper && this.value) {

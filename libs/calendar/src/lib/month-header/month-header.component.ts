@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
+import { addMonths, startOfMonth } from 'date-utils';
+
 import { MonthStepDelta } from './month-step-delta.model';
 
 @Component({
@@ -9,16 +11,17 @@ import { MonthStepDelta } from './month-step-delta.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MonthHeaderComponent {
+  @Input() month = startOfMonth(new Date());
+  @Input() activeMonth = startOfMonth(new Date());
   @Input() showMonthStepper = true;
-  @Input() month = new Date();
   @Input() monthAndYearFormat?: string;
   @Input() locale?: string;
 
-  @Output() monthStep = new EventEmitter<MonthStepDelta>();
+  @Output() activeMonthChange = new EventEmitter<Date>();
 
-  stepMonth(step: MonthStepDelta) {
-    this.monthStep.emit(step);
+  stepMonth(delta: MonthStepDelta) {
+    const activeMonth = addMonths(this.activeMonth || new Date(), delta);
+    this.activeMonthChange.emit(activeMonth);
   }
-
   // TODO: get the next month label from CLDR
 }

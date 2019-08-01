@@ -55,7 +55,7 @@ export function isDateAfter(date1: Date, date2: Date) {
   return date1.getTime() > date2.getTime();
 }
 
-export function isDate(value?: any): value is Date {
+export function isValidDate(value?: any): value is Date {
   return value instanceof Date && typeof value.getTime === 'function' && !isNaN(value.getTime());
 }
 

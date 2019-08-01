@@ -5,17 +5,19 @@
   <lib-days-of-week [locale]="locale"></lib-days-of-week>
   <ng-container *ngFor="let month of months; trackBy: trackByMilliseconds">
     <lib-month-header [month]="month"
+                      [activeMonth]="activeMonth"
+                      (activeMonthChange)="onActiveMonthChange($event)"
                       [monthAndYearFormat]="monthAndYearFormat"
                       [showMonthStepper]="showMonthStepper"
                       [locale]="locale"
-                      (monthStep)="onMonthStep($event)"
     ></lib-month-header>
     <lib-month [month]="month"
                [selectedDate]="value"
+               (selectedDateChange)="onSelect($event)"
                [min]="min"
                [activeDate]="activeDate"
-               (selectedDateChange)="onSelect($event)"
-               (dayStep)="onDayStep($event)"
+               (activeDateChange)="onActiveDateChange($event)"
+               [locale]="locale"
     ></lib-month>
   </ng-container>
 </div>

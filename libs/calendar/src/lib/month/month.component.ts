@@ -12,7 +12,7 @@ import {
 import { WeekDay } from '@angular/common';
 import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
 
-import { areDatesInSameMonth, getDaysOfMonth, isDateAfter, isSameDate, startOfDay } from 'date-utils';
+import { addDays, areDatesInSameMonth, getDaysOfMonth, isValidDate, isDateAfter, isSameDate, startOfDay } from 'date-utils';
 import { DayStepDelta } from './day-step-delta.model';
 
 export const keyCodesToDaySteps = new Map<number, DayStepDelta>([
@@ -33,12 +33,12 @@ export class MonthComponent implements AfterViewInit, OnChanges {
   firstDayOfMonth!: string;
   currentDate = startOfDay(new Date());
 
-  private readonly dateSelector = '.month__date';
+  private readonly dateSelector = 'time.month__date';
 
   @Input() selectedDate?: Date;
   @Input() min?: Date;
   @Input() locale?: string;
-  @Input() activeDate?: Date;
+  @Input() activeDate!: Date;
 
   private _month!: Date;
 
@@ -55,7 +55,7 @@ export class MonthComponent implements AfterViewInit, OnChanges {
   }
 
   @Output() selectedDateChange = new EventEmitter<Date>();
-  @Output() dayStep = new EventEmitter<DayStepDelta>();
+  @Output() activeDateChange = new EventEmitter<Date>();
 
   constructor(public changeDetectorRef: ChangeDetectorRef) {}
 
@@ -90,24 +90,24 @@ export class MonthComponent implements AfterViewInit, OnChanges {
 
     if (dayStepDelta) {
       event.preventDefault();
-      this.dayStep.emit(dayStepDelta);
+      const activeDate = addDays(this.activeDate, dayStepDelta);
+      this.activeDateChange.emit(activeDate);
     }
   }
 
   onMonthClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
 
-    if (target && target.matches(this.dateSelector)) {
+    if (this.isTimeElement(target)) {
       this.onDateClick(target);
     }
   }
 
-  private onDateClick(dateElement: HTMLElement) {
-    const datetimeAttribute = dateElement.getAttribute('datetime');
+  private onDateClick(timeElement: HTMLTimeElement) {
+    const selectedDate = new Date(timeElement.dateTime + 'T00:00');
 
-    if (datetimeAttribute) {
-      const clickedDate = new Date(datetimeAttribute + 'T00:00');
-      this.selectDate(clickedDate);
+    if (isValidDate(selectedDate)) {
+      this.selectDate(selectedDate); 
     }
   }
 
@@ -115,5 +115,9 @@ export class MonthComponent implements AfterViewInit, OnChanges {
     if (!this.isSelected(date) && !this.isDisabled(date)) {
       this.selectedDateChange.emit(date);
     }
+  }
+
+  private isTimeElement(element: HTMLElement): element is HTMLTimeElement {
+    return !!element && element.matches(this.dateSelector);
   }
 }
