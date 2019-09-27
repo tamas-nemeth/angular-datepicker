@@ -107,7 +107,7 @@ export class MonthComponent implements AfterViewInit, OnChanges {
     const selectedDate = new Date(timeElement.dateTime + 'T00:00');
 
     if (isValidDate(selectedDate)) {
-      this.selectDate(selectedDate); 
+      this.selectDate(selectedDate);
     }
   }
 

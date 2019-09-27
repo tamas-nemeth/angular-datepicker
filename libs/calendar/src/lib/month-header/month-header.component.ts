@@ -2,8 +2,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 
 import { addMonths, startOfMonth } from 'date-utils';
 
-import { MonthStepDelta } from './month-step-delta.model';
-
 @Component({
   selector: 'lib-month-header',
   templateUrl: './month-header.component.html',
@@ -19,7 +17,7 @@ export class MonthHeaderComponent {
 
   @Output() activeMonthChange = new EventEmitter<Date>();
 
-  stepMonth(delta: MonthStepDelta) {
+  stepMonth<Delta extends number>(delta: Delta) {
     const activeMonth = addMonths(this.activeMonth || new Date(), delta);
     this.activeMonthChange.emit(activeMonth);
   }
