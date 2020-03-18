@@ -30,7 +30,7 @@ class CalendarWrapperComponent {
   locale?: string;
   monthAndYearFormat?: string;
   firstDayOfWeek?: 'MONDAY' | 'SUNDAY';
-  @ViewChild(CalendarComponent, {static: false}) calendarComponent!: CalendarComponent;
+  @ViewChild(CalendarComponent) calendarComponent!: CalendarComponent;
   dateControl = new FormControl(defaultDate);
 }
 
@@ -130,7 +130,7 @@ describe('CalendarComponent', () => {
     it('should not have --disabled class by default', () => {
       fixture.detectChanges();
 
-      expect(getCalendarDebugElement().classes['calendar--disabled']).toBe(false);
+      expect(getCalendarDebugElement().classes['calendar--disabled']).toBeUndefined();
     });
 
     it('should display one month component by default', () => {

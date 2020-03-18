@@ -11,9 +11,6 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
     "lib": [
       "es2018",
       "dom"
@@ -26,18 +23,19 @@
     "noUnusedParameters": true,
     "paths": {
       "date-utils": [
-        "libs/date-utils/index.ts"
+        "projects/date-utils/index.ts"
       ],
       "calendar": [
-        "libs/calendar/src/public-api.ts"
+        "projects/calendar/src/public-api.ts"
       ],
       "modal": [
-        "libs/modal/src/public-api.ts"
+        "projects/modal/src/public-api.ts"
       ]
     }
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
+    "strictTemplates": true,
     "strictInjectionParameters": true
   }
 }

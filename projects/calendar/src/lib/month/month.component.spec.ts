@@ -174,7 +174,7 @@ describe('MonthComponent', () => {
     component.min = new Date(2019, Month.February, 3);
     fixture.detectChanges();
 
-    expect(getDayDebugElement(3)!.classes[disabledModifierClass]).toBe(false);
+    expect(getDayDebugElement(3)!.classes[disabledModifierClass]).toBeUndefined();
   });
 
   it('should NOT add --disabled class to a day later than minimum date', () => {
@@ -182,7 +182,7 @@ describe('MonthComponent', () => {
     component.min = new Date(2019, Month.February, 3);
     fixture.detectChanges();
 
-    expect(getDayDebugElement(4)!.classes[disabledModifierClass]).toBe(false);
+    expect(getDayDebugElement(4)!.classes[disabledModifierClass]).toBeUndefined();
   });
 
   it('should NOT select disabled date', () => {

@@ -10,7 +10,7 @@ import { addMonths, startOfMonth } from 'date-utils';
 })
 export class MonthHeaderComponent {
   @Input() month = startOfMonth(new Date());
-  @Input() activeMonth = startOfMonth(new Date());
+  @Input() activeMonth?: Date = startOfMonth(new Date());
   @Input() showMonthStepper = true;
   @Input() monthAndYearFormat?: string;
   @Input() locale?: string;

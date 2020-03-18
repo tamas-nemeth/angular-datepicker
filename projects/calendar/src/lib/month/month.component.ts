@@ -36,7 +36,7 @@ export class MonthComponent implements AfterViewInit, OnChanges {
   private readonly dateSelector = 'time.month__date';
 
   @Input() selectedDate?: Date;
-  @Input() min?: Date;
+  @Input() min?: Date | null;
   @Input() locale?: string;
   @Input() activeDate!: Date;
 
@@ -95,7 +95,8 @@ export class MonthComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  onMonthClick(event: MouseEvent) {
+  onMonthClick(event: MouseEvent | Event) {
+    // should be MouseEvent | KeyboardEvent, but $event type for keyup.enter is not inferred correctly
     const target = event.target as HTMLElement;
 
     if (this.isTimeElement(target)) {

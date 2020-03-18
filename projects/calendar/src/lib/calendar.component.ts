@@ -49,7 +49,7 @@ export class CalendarComponent extends CustomControl<Date> implements AfterConte
   private onTouched?: () => void;
 
   @Input() value?: Date;
-  @Input() min?: Date;
+  @Input() min?: Date | null;
   @Input() monthAndYearFormat?: string;
 
   // locale input is for demo purposes only - until there is an API for switching the locale at runtime
@@ -75,15 +75,15 @@ export class CalendarComponent extends CustomControl<Date> implements AfterConte
     this._firstDayOfWeek = firstDayOfWeek;
   }
 
-  private _firstMonth?: Date;
+  private _firstMonth?: Date | null;
 
   @Input()
-  set firstMonth(firstMonth: Date | undefined) {
+  set firstMonth(firstMonth: Date | undefined | null) {
     this._firstMonth = firstMonth;
-    this.activeMonth = this._firstMonth;
+    this.activeMonth = this._firstMonth || undefined;
   }
 
-  get firstMonth(): Date | undefined {
+  get firstMonth(): Date | undefined | null {
     return this._firstMonth;
   }
 
