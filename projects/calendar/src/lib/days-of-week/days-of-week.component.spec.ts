@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import HungarianLocale from '@angular/common/locales/hu';
@@ -11,12 +11,12 @@ describe('DaysOfWeekComponent', () => {
   let fixture: ComponentFixture<DaysOfWeekComponent>;
 
   describe('', () => {
-    beforeEach(async(() => {
-      TestBed.configureTestingModule({
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
         declarations: [DaysOfWeekComponent]
       })
         .compileComponents();
-    }));
+    });
 
     beforeEach(() => {
       fixture = TestBed.createComponent(DaysOfWeekComponent);
@@ -60,7 +60,7 @@ describe('DaysOfWeekComponent', () => {
   describe('localisation', () => {
     let localeId = 'en-US';
 
-    beforeEach(async(() => {
+    beforeEach(async () => {
       TestBed.configureTestingModule({
         declarations: [DaysOfWeekComponent],
         providers: [
@@ -68,7 +68,7 @@ describe('DaysOfWeekComponent', () => {
         ]
       })
         .compileComponents();
-    }));
+    });
 
     beforeEach(() => {
       registerLocaleData(HungarianLocale);

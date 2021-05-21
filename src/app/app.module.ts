@@ -1,5 +1,5 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { registerLocaleData } from '@angular/common';
 import HungarianLocale from '@angular/common/locales/hu';
 import BritishLocale from '@angular/common/locales/en-GB';

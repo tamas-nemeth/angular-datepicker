@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/lib",
-    "target": "es2015",
+    "declarationMap": true,
     "declaration": true,
     "inlineSources": true,
     "types": [],
@@ -14,10 +14,11 @@
   "angularCompilerOptions": {
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true,
-    "fullTemplateTypeCheck": true,
     "strictTemplates": true,
     "strictInjectionParameters": true,
-    "enableResourceInlining": true
+    "enableResourceInlining": true,
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInputAccessModifiers": true
   },
   "exclude": [
     "src/test.ts",

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
@@ -49,8 +49,8 @@ describe('CalendarComponent', () => {
     jasmine.clock().mockDate(mockDate);
   });
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule
       ],
@@ -63,7 +63,7 @@ describe('CalendarComponent', () => {
       ]
     })
       .compileComponents();
-  }));
+  });
 
   describe('', () => {
     beforeEach(() => {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { A11yModule } from '@angular/cdk/a11y';
 
@@ -21,8 +21,8 @@ describe('ModalToggleDirective', () => {
   let hostComponent: ModalToggleHostComponent;
   let fixture: ComponentFixture<ModalToggleHostComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [
         OverlayModule,
         A11yModule
@@ -34,7 +34,7 @@ describe('ModalToggleDirective', () => {
       ]
     })
       .compileComponents();
-  }));
+  });
 
 
   beforeEach(() => {

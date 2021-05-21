@@ -1,5 +1,5 @@
 import { PipeTransform } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { CdkAriaLive } from '@angular/cdk/a11y';
 
@@ -22,15 +22,15 @@ describe('MonthHeaderComponent', () => {
     jasmine.clock().mockDate(mockDate);
   });
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [
         MonthHeaderComponent,
         MockDirective(CdkAriaLive),
         MockPipe(MonthAndYearPipe, mockPipeTransform<MonthAndYearPipe>('monthAndYearPipe'))]
     })
       .compileComponents();
-  }));
+  });
 
   function mockPipeTransform<TPipe extends PipeTransform>(pipeName: string) {
     return (...parameters: Parameters<TPipe['transform']>) => `${pipeName}(${parameters.map(param => `${param}`).join(', ')})`;

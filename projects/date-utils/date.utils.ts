@@ -67,7 +67,7 @@ export function toISODateString(date: Date) {
 export const monthAndYearFormatOptions = {
   year: 'numeric',
   month: 'long'
-};
+} as const;
 
 export const localeDateFormatDayPart = /\s?d+(\.|,|\sde)?/;
 

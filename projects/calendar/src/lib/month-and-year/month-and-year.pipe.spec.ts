@@ -12,7 +12,7 @@ describe('MonthAndYearPipe', () => {
     'en-US': 'MMMM y',
     'en-GB': 'MMMM y',
     hu: 'y. MMMM',
-  };
+  } as const;
 
   let pipe: MonthAndYearPipe;
 

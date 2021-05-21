@@ -16,14 +16,15 @@ export class ModalComponent implements AfterContentInit {
   @Input() closeOnValueChange = true;
   @ContentChildren(CustomControl) private controlList!: QueryList<CustomControl<any>>;
 
-  private _overlayOrigin?: CdkOverlayOrigin;
+  // TODO: allow overlay origin to be undefined
+  #overlayOrigin!: CdkOverlayOrigin;
 
-  set overlayOrigin(overlayOrigin: CdkOverlayOrigin | undefined) {
-    this._overlayOrigin = overlayOrigin;
+  set overlayOrigin(overlayOrigin: CdkOverlayOrigin) {
+    this.#overlayOrigin = overlayOrigin;
     this.changeDetectorRef.markForCheck();
   }
   get overlayOrigin() {
-    return this._overlayOrigin;
+    return this.#overlayOrigin;
   }
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {}
